@@ -20,7 +20,7 @@
                 {{ target_user.profile.nickname }}
 
                 {% if target_user == user %}
-                    <a href="{% url 'profileapp:update' pk=target_user.profile.pk %}"
+                    <a href="{% url 'accountapp:profile_update' pk=target_user.profile.pk %}"
                        class="btn btn-info">Edit</a>
                 {% endif %}
             </h2>
@@ -45,7 +45,7 @@
             </div>
             {% else %}
                 {% if target_user == user %}
-                <a href="{% url 'profileapp:create' %}">
+                <a href="{% url 'accountapp:profile_create' %}">
                     Create Profile
                 </a>
                 {% else %}
