@@ -22,12 +22,12 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('accounts/', include('accountapp.urls')),
+    path('assetmaster/', include('assetmasterapp.urls')),
     # path('profiles/', include('profileapp.urls')),
     # path('articles/', include('articleapp.urls')),
     # path('comments/', include('commentapp.urls')),
     # path('dashboard/', include('dashboardapp.urls')),
     # path('portfolio/', include('portfolioapp.urls')),
-    # path('assetmaster/', include('assetmasterapp.urls')),
     # path('equities/', include('equityapp.urls')),
     # path('equitytransactions/', include('equitytransactionapp.urls')),
     # path('hozylab/', include('hozylabapp.urls')),

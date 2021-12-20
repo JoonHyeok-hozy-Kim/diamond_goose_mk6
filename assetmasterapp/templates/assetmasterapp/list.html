@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/assetmasterapp.css' %}">
+    {% endblock %}
+
+    <style>
+
+        .container {
+            width: 100%;
+        }
+
+        .container a {
+            width: 250px;
+            text-decoration: none;
+        }
+
+        .container div {
+            width: 250px;
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            border-radius: 5px;
+        }
+
+
+    </style>
+
+    <div style="width:100%; text-align: center;">
+        <a href="{% url 'assetmasterapp:create' %}" class="btn btn-light col-2" style="margin: 3rem 0;" >새로운 자산 추가하기</a>
+    </div>
+
+    <div class="container">
+        {% if query_asset_list %}
+            {% for asset in query_asset_list %}
+                {% if asset.asset_type == 'EQUITY' %}
+                    <div style="background-color: #264257;">
+                {% elif asset.asset_type == 'ETF' %}
+                    <div style="background-color: #0080F0;">
+                {% elif asset.asset_type == 'GUARDIAN' %}
+                    <div style="background-color: #FF9C00;">
+                {% elif asset.asset_type == 'REITS' %}
+                    <div style="background-color: #00C484;">
+                {% elif asset.asset_type == 'PENSION' %}
+                    <div style="background-color: #92D050;">
+                {% elif asset.asset_type == 'CRYPTO' %}
+                    <div style="background-color: #F001A3;">
+                {% endif %}
+                        <a href="{% url 'assetmasterapp:detail' pk=asset.id %}">
+                            {% include 'snippets/asset_card.html' with asset=asset %}
+                        </a>
+                    </div>
+            {% endfor %}
+        {% else %}
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/magicgrid.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load format_masks %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/assetmasterapp.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/equitytransactionapp.css' %}">
+    {% endblock %}
+
+    <div style="margin: 2rem 2rem">
+        <div style="margin: 1rem auto;">
+            <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light" style="display: inline">자산 목록</a>
+            <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">수정하기</a>
+            <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">삭제하기</a>
+            {% if user.is_authenticated and my_portfolio_pk %}
+                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">My Portfolio</a>
+            {% endif %}
+        </div>
+        <div style="display: inline-block; margin: 1rem auto;">
+            <div style="display: flex; float:left; width: 250px; height: 250px; margin-right: 2rem;
+                        align-items: center; justify-content: center; background-color: #FFFFFF;">
+                <img src="{{ target_asset.image.url }}" alt="" style="width: 90%;">
+            </div>
+            <div style="display: inline-block;">
+                <div>
+                    <h3 style="display: inline-block; margin-right: 1rem; color:#FFFFFF">
+                        {{ target_asset.name }}
+                    </h3>
+                    <h5 style="display: inline; background-color: #264257; color:#FFFFFF">
+                        {{ target_asset.ticker }}
+                    </h5>
+                </div>
+                <div style="margin: 1rem 1rem;">
+                    <div>
+                        <table class="assetmasterapp_inverted_table">
+                            <tr class="assetmasterapp_inverted_table_tr">
+                                <th class="assetmasterapp_inverted_table_th">Market</th>
+                                <th class="assetmasterapp_inverted_table_th">Currency</th>
+                                <th class="assetmasterapp_inverted_table_th">현재가</th>
+                            </tr>
+                            <tr class="assetmasterapp_inverted_table_tr">
+                                <td class="assetmasterapp_inverted_table_td">{{ target_asset.market }}</td>
+                                <td class="assetmasterapp_inverted_table_td">{{ target_asset.currency }}</td>
+                                {% if target_asset.currency == 'USD' %}
+                                    <td class="assetmasterapp_inverted_table_td">{{ target_asset.current_price|currency_usd }}</td>
+                                {% elif target_asset.currency == 'KRW' %}
+                                    <td class="assetmasterapp_inverted_table_td">{{ target_asset.current_price|currency_krw }}</td>
+                                {% else %}
+                                    <td class="assetmasterapp_inverted_table_td">{{ target_asset.current_price|intcomma }}</td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,3 +1,10 @@
+.assetmasterapp_main_title {
+    display: inline-block;
+    background-color: #FF9C00;
+    font-family: 'Nanum Gothic', sans-serif;
+    color: #FFFFFF
+}
+
 .asset_card_white_text_div {
     width: 90%;
     margin-bottom: 2%;
