@@ -1,0 +1,21 @@
+.pensionapp_main_title {
+    display: inline-block;
+    background-color: #92D050;
+    font-family: 'Nanum Gothic', sans-serif;
+    color: #000000;
+}
+
+.pensionapp_퇴직연금_style {
+    background-color: #FF9C00;
+    color: #081321;
+}
+
+.pensionapp_연금저축_style {
+    background-color: #92D050;
+    color: #081321;
+}
+
+.pensionapp_IRP_style {
+    background-color: #00B0F0;
+    color: #081321;
+}
