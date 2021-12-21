@@ -16,12 +16,11 @@
 
         <div style="margin: 1rem;">
             <div style="display: inline-block">
-                <div>[HOZY] PORTFOLIO 개발 예정</div>
-{#                {% if target_portfolio_pk %}#}
-{#                    <a href="{% url 'portfolioapp:detail' pk=target_portfolio_pk %}" class="btn btn-info">My Portfolio</a>#}
-{#                {% else %}#}
-{#                    {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}#}
-{#                {% endif %}#}
+                {% if target_portfolio_pk %}
+                    <a href="{% url 'portfolioapp:detail' pk=target_portfolio_pk %}" class="btn btn-info">My Portfolio</a>
+                {% else %}
+                    {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}
+                {% endif %}
             </div>
 
         </div>
