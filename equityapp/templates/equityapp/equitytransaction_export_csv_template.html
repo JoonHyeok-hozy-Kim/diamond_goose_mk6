@@ -1,0 +1,9 @@
+{% load bootstrap4 %}
+
+<div style="display: inline-block; float: right; ">
+    <form action="{% url 'equityapp:equitytransaction_export_csv_template' %}"  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-info btn-sm btn-block" >CSV Template</button>
+        <input type="hidden" name="equity_pk" value="{{ equity.pk }}">
+    </form>
+</div>
