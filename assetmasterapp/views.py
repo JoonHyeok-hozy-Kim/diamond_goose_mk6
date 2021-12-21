@@ -15,6 +15,9 @@ from django.utils.text import Truncator
 from assetmasterapp.forms import AssetCreationForm
 from assetmasterapp.models import Asset
 from diamond_goose_mk6.settings import MEDIA_ROOT
+from equityapp.models import Equity
+from portfolioapp.models import Portfolio
+
 
 class AssetListView(ListView):
     model = Asset
@@ -30,7 +33,6 @@ class AssetListView(ListView):
             query_asset['image'] = 'media/'+query_asset['image']
 
         context.update({'query_asset_list': query_asset_list})
-
         return context
 
 
@@ -48,6 +50,42 @@ class AssetDetailView(DetailView):
     context_object_name = 'target_asset'
     template_name = 'assetmasterapp/detail.html'
 
+    def get_context_data(self, **kwargs):
+        # Update Asset's current price
+        self.object.update_current_price()
+        self.object.refresh_from_db()
+
+        context = super(AssetDetailView, self).get_context_data(**kwargs)
+
+        my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()
+        if my_portfolio_scalar_query:
+            for my_portfolio in my_portfolio_scalar_query:
+                my_portfolio_pk = my_portfolio['id']
+                target_user_id = my_portfolio['owner_id']
+            context.update({'my_portfolio_pk': my_portfolio_pk})
+            context.update({'target_user_id': target_user_id})
+
+            my_asset_pk = None
+            if self.object.asset_type == 'EQUITY':
+                my_equity_scalar_query = Equity.objects.filter(asset=self.object.pk,
+                                                               portfolio=my_portfolio_pk,
+                                                               owner=self.request.user).values()
+                if my_equity_scalar_query:
+                    for my_equity in my_equity_scalar_query:
+                        my_asset_pk = my_equity['id']
+
+            elif self.object.asset_type == 'GUARDIAN':
+                None
+            elif self.object.asset_type == 'REITS':
+                None
+            elif self.object.asset_type == 'PENSION':
+                None
+            elif self.object.asset_type == 'CRYPTO':
+                None
+            if my_asset_pk:
+                context.update({'my_asset_pk': my_asset_pk})
+        return context
+
 
 class AssetUpdateView(UpdateView):
     model = Asset
@@ -56,7 +94,7 @@ class AssetUpdateView(UpdateView):
     template_name = 'assetmasterapp/update.html'
 
     def get_success_url(self):
-        return reverse('assetmasterapp:detail',kwargs={'pk':self.object.pk})
+        return reverse('assetmasterapp:detail', kwargs={'pk':self.object.pk})
 
 
 class AssetDeleteView(DeleteView):

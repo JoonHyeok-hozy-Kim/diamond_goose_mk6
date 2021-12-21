@@ -7,17 +7,18 @@
     {% load static %}
     {% block extrahead %}
         <link rel="stylesheet" type="text/css" href="{% static 'css/assetmasterapp.css' %}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/equitytransactionapp.css' %}">
     {% endblock %}
 
     <div style="margin: 2rem 2rem">
         <div style="margin: 1rem auto;">
-            <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light" style="display: inline">자산 목록</a>
-            <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">수정하기</a>
-            <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">삭제하기</a>
-            {% if user.is_authenticated and my_portfolio_pk %}
-                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">My Portfolio</a>
-            {% endif %}
+            <div style="display: block; margin-bottom: 1rem;">
+                <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light" style="display: inline">자산 목록</a>
+                <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">수정하기</a>
+                <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">삭제하기</a>
+                {% if user.is_authenticated and my_portfolio_pk %}
+                    <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">My Portfolio</a>
+                {% endif %}
+            </div>
         </div>
         <div style="display: inline-block; margin: 1rem auto;">
             <div style="display: flex; float:left; width: 250px; height: 250px; margin-right: 2rem;
@@ -55,9 +56,23 @@
                         </table>
                     </div>
                 </div>
+                <div style="display: block;">
+                    {% if user.is_authenticated %}
+                        {% if my_portfolio_pk %}
+                            {% if target_asset.asset_type == 'EQUITY' %}
+                                {% if my_asset_pk != target_asset.pk %}
+                                    {% include 'equityapp/equity_create.html' with asset=target_asset %}
+                                {% endif %}
+                            {% elif target_asset.asset_type == 'GUARDIAN' %}
+                            {% elif target_asset.asset_type == 'REITS' %}
+                            {% elif target_asset.asset_type == 'PENSION' %}
+                            {% elif target_asset.asset_type == 'CRYPTO' %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-
 
 {% endblock %}

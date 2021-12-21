@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load format_masks %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/assetmasterapp.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/equitytransactionapp.css' %}">
+    {% endblock %}
+
+    <div style="margin: 2rem 2rem">
+        <div style="margin: 1rem auto;">
+            <div style="display: block; margin-bottom: 1rem;">
+                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">
+                    My Portfolio</a>
+            </div>
+        </div>
+        <div style="display: inline-block; margin: 1rem auto;">
+            {% include 'equityapp/equity_stats.html' with asset=target_equity.asset equity=target_equity %}
+        </div>
+    </div>
+
+{% endblock %}
