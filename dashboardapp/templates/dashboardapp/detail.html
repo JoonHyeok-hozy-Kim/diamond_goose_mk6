@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/dashboardapp.css' %}">
+    {% endblock %}
+
+    <div style="margin: 1rem;">
+
+        <div class="dashboardapp_main_title">
+            <h3>My Dashboard</h3>
+        </div>
+
+        <div style="margin: 1rem;">
+            <div style="display: inline-block">
+                <div>[HOZY] PORTFOLIO 개발 예정</div>
+{#                {% if target_portfolio_pk %}#}
+{#                    <a href="{% url 'portfolioapp:detail' pk=target_portfolio_pk %}" class="btn btn-info">My Portfolio</a>#}
+{#                {% else %}#}
+{#                    {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}#}
+{#                {% endif %}#}
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
