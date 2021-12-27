@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/pensionapp.css' %}">
+    {% endblock %}
+
+    <div style="max-width: 500px; margin: 4rem auto">
+        <div>
+            <h4 class="pensionapp_main_title">Add Pension Asset</h4>
+        </div>
+        <div style="color: #FFFFFF">
+            <h5 style="display: inline-block">{{ target_asset.name }}</h5>
+            <h7 style="display: inline-block; background-color: #264257">{{ target_asset.ticker }}</h7>
+        </div>
+        <div style="max-width: 500px; margin: 4rem auto">
+            <div class="text-white">
+                <form action="{% url 'pensionapp:pensionasset_create' pension_pk=target_pension asset_pk=target_asset.pk %}" method="post">
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+                        {% bootstrap_form form %}
+                        <input type="submit" class="btn btn-info" value="Open Pension Posision">
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

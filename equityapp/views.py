@@ -36,7 +36,7 @@ class EquityCreateView(CreateView):
         return reverse('equityapp:equity_detail', kwargs={'pk':self.object.asset.pk})
 
 
-@method_decorator(has_equity_ownership,'get')
+@method_decorator(has_equity_ownership, 'get')
 class EquityDetailView(DetailView, FormMixin):
     model = Equity
     form_class = EquityTransactionCreationForm
@@ -87,7 +87,7 @@ class EquityTransactionCreateView(CreateView):
 
     def form_valid(self, form):
         temp_transaction = form.save(commit=False)
-        temp_transaction.equity = Equity.objects.get(pk=self.request.POST['target_equity_pk'])
+        temp_transaction.equity = Equity.objects.get(pk=self.request.POST['equity_pk'])
         temp_transaction.save()
         return super().form_valid(form)
 

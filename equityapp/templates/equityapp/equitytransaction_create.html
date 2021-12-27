@@ -11,7 +11,7 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             <input type="submit" class="btn btn-warning btn-sm">
-            <input type="hidden" name="target_equity_pk" value="{{ target_equity.pk }}">
+            <input type="hidden" name="equity_pk" value="{{ equity.pk }}">
         </form>
     </div>
 </div>

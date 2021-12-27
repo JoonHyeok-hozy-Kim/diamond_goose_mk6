@@ -1,0 +1,46 @@
+{% load static %}
+{% load format_masks %}
+{% load bootstrap4 %}
+
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/pensionapp.css' %}">
+{% endblock %}
+
+<div style="margin-bottom: 0.3rem;">
+    <table>
+        <colgroup>
+            <col span="1" style="width: 15rem;">
+            <col span="1" style="width: 11rem;">
+            <col span="1" style="width: 11rem;">
+            <col span="1" style="width: 11rem;">
+            <col span="1" style="width: 11rem;">
+            <col span="1" style="width: 7rem;">
+        </colgroup>
+        {% if pension.pension_type == '퇴직연금' %}
+            <tr style="background-color: #FF9C00; color: #081321;">
+        {% elif pension.pension_type == '연금저축' %}
+            <tr style="background-color: #92D050; color: #081321;">
+        {% elif pension.pension_type == 'IRP' %}
+            <tr style="background-color: #00B0F0; color: #081321;">
+        {% endif %}
+            <th rowspan="2" style="border: 1px solid black; text-align: center; font-size: larger; font-weight: bolder;">
+                {{ pension.pension_type }}
+                {% if list_flag %}
+                    <a href="{% url 'pensionapp:pension_detail' pk=pension.pk %}" class="btn btn-dark btn-sm">관리</a>
+                {% endif %}
+            </th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder;">현재규모</th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder;">납입총액</th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder;">수익금(분배금포함)</th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder;">총수익률</th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder;">위험자산비중</th>
+        </tr>
+        <tr>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.total_current_value|currency_krw }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.total_paid_amount|currency_krw }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.total_profit_amount|currency_krw }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.rate_of_return|currency_krw }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.current_risk_asset_ratio|percentage_rate_format }}</td>
+        </tr>
+    </table>
+</div>

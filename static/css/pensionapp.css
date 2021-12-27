@@ -19,3 +19,27 @@
     background-color: #00B0F0;
     color: #081321;
 }
+
+
+.pensionasset_delete_inverted_table{
+    border-collapse: collapse;
+    color: #FFFFFF;
+}
+
+.pensionasset_delete_inverted_table_tr {
+    display: block;
+    float: left;
+}
+
+.pensionasset_delete_inverted_table_th {
+    display: block;
+    width: 10rem;
+    text-indent: 0.5rem;
+    border-bottom: 1px solid black;
+}
+
+.pensionasset_delete_inverted_table_td {
+    display: block;
+    width: 15rem;
+    border-bottom: 1px solid black;
+}

@@ -66,6 +66,7 @@
                             {% elif target_asset.asset_type == 'GUARDIAN' %}
                             {% elif target_asset.asset_type == 'REITS' %}
                             {% elif target_asset.asset_type == 'PENSION' %}
+                                <a href="{% url 'pensionapp:pensionasset_create' asset_pk=target_asset.pk %}" class="btn btn-info">Open Pension Position</a>
                             {% elif target_asset.asset_type == 'CRYPTO' %}
                             {% endif %}
                         {% endif %}

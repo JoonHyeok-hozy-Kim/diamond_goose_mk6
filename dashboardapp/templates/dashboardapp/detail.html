@@ -22,6 +22,9 @@
                     {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}
                 {% endif %}
             </div>
+            <div style="display: inline-block">
+                <a href="{% url 'pensionapp:pension_list' %}" class="btn btn-info">My Pensions</a>
+            </div>
 
         </div>
 

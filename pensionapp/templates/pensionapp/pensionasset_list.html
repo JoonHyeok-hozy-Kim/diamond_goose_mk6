@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/assetmasterapp.css' %}">
+    {% endblock %}
+
+    <style>
+
+        .container {
+            width: 100%;
+        }
+
+        .container a {
+            width: 250px;
+            text-decoration: none;
+        }
+
+        .container div {
+            width: 250px;
+            display: flex;
+            justify-content: start;
+            align-items: start;
+            border-radius: 5px;
+        }
+
+
+    </style>
+
+    <div style="width:100%; text-align: center;">
+        <a href="{% url 'assetmasterapp:create' %}" class="btn btn-light col-2" style="margin: 3rem 0;" >새로운 종목 추가하기</a>
+    </div>
+
+    <div class="container">
+        {% if queryset_not_my_pension_asset_asset %}
+            {% for asset in queryset_not_my_pension_asset_asset %}
+                <div style="background-color: #92D050;">
+{#                    <a href="{% url 'assetmasterapp:detail' pk=asset.id %}">#}
+                    <a href="{% url 'pensionapp:pensionasset_create' pension_pk=pension_pk asset_pk=asset.id %}">
+                        {% include 'snippets/asset_card.html' with asset=asset %}
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/magicgrid.js' %}"></script>
+
+{% endblock %}
