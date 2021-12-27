@@ -31,7 +31,6 @@ class AssetListView(ListView):
         for query_asset in query_asset_list:
             query_asset['name'] = Truncator(query_asset['name']).chars(29)
             query_asset['image'] = 'media/'+query_asset['image']
-
         context.update({'query_asset_list': query_asset_list})
         return context
 
@@ -72,7 +71,7 @@ class AssetDetailView(DetailView):
                                                                owner=self.request.user).values()
                 if my_equity_scalar_query:
                     for my_equity in my_equity_scalar_query:
-                        my_asset_pk = my_equity['id']
+                        my_asset_pk = my_equity['asset_id']
 
             elif self.object.asset_type == 'GUARDIAN':
                 None

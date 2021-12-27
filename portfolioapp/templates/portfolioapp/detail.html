@@ -12,11 +12,12 @@
     <div style="margin: 1rem;">
 
         <div style="display: block">
-            <div style="display: inline-block">
-                <h2 class="portfolioapp_main_title" style="margin-right: 2rem;">Portfolio Summary</h2>
+            <div style="display: block; margin-bottom: 0.5rem;">
+                <a href="{% url 'dashboardapp:detail' pk=target_portfolio.dashboard.pk %}" class="btn btn-info btn-sm" style="display: inline-block">My Dashboard</a>
+                <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light btn-sm" style="display: inline-block">Add Asset</a>
             </div>
-            <div style="display: inline-block">
-                <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light btn-sm">Add Asset</a>
+            <div style="display: block">
+                <h2 class="portfolioapp_main_title" style="margin-right: 2rem;">Portfolio Summary</h2>
             </div>
         </div>
 
@@ -54,6 +55,7 @@
                     <col span="1" style="width: 8rem;">
                     <col span="1" style="width: 6rem;">
                     <col span="1" style="width: 6rem;">
+                    <col span="1" style="width: 2.5rem;">
                 </colgroup>
                 <tr style="text-align: center; background-color: #007D8A">
                     <th style="border: 1px solid black;">자산구분</th>
@@ -67,8 +69,9 @@
                     <th style="border: 1px solid black;">총보유가치<br/>(현지통화)</th>
                     <th style="border: 1px solid black;">수익률<br/>(MV)</th>
                     <th style="border: 1px solid black;">수익률<br/>(FIFO)</th>
+
+                    <th style="border: 1px solid black; background-color: #FA0067; color: #FFFFFF;">삭제</th>
                 </tr>
-{#                {% include 'equityapp/detail.html' with portfolio=target_portfolio %}#}
                 {% include 'equityapp/equity_list.html' with portfolio=target_portfolio %}
             </table>
 

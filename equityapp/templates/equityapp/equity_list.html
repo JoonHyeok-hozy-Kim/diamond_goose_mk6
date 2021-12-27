@@ -30,6 +30,9 @@
             {% endif %}
             <td style="text-align: center; border: 1px solid black;">{{ equity.rate_of_return_mv|percentage_rate_format }}</td>
             <td style="text-align: center; border: 1px solid black;">{{ equity.rate_of_return_fifo|percentage_rate_format }}</td>
+            <td style="text-align: center; border: 1px solid black;">
+                <a href="{% url 'equityapp:equity_delete' pk=equity.pk %}" style="text-decoration: none; color: #FA0067;">X</a>
+            </td>
         {% endif %}
     </tr>
 {% endfor %}

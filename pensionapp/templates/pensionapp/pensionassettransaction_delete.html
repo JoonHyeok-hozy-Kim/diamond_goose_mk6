@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load format_masks %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/equityapp.css' %}">
+    {% endblock %}
+
+    <div style="max-width: 500px; margin: 4rem auto">
+        <div style="margin: 2rem 0;">
+            <h4 class="equitytransaction_main_title">Delete Pension Asset Transaction</h4>
+            <h6 style="color: #FFFFFF;">Are you sure to delete this transaction?</h6>
+            <div style="width: 27rem; background-color: #264257;">
+                <table class="equitytransaction_delete_inverted_table">
+                    <tr class="equitytransaction_delete_inverted_table_tr">
+                        <th class="equitytransaction_delete_inverted_table_th">거래일자</th>
+                        <th class="equitytransaction_delete_inverted_table_th">유형</th>
+                        <th class="equitytransaction_delete_inverted_table_th">수량</th>
+                        <th class="equitytransaction_delete_inverted_table_th">가격</th>
+                        <th class="equitytransaction_delete_inverted_table_th">제비용</th>
+                        <th class="equitytransaction_delete_inverted_table_th">제세금</th>
+                        <th class="equitytransaction_delete_inverted_table_th">비고</th>
+                    </tr>
+                    <tr class="equitytransaction_delete_inverted_table_tr">
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.transaction_date|date:"Y.m.d h:i:s" }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.transaction_type }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.quantity }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.price|currency_krw }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.transaction_fee|currency_krw  }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.transaction_tax|currency_krw  }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_pension_asset_transaction.note }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="text-white">
+            <form action="{% url 'pensionapp:pensionassettransaction_delete' pk=target_pension_asset_transaction.pk %}" method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-dark">
+                <a href="{% url 'pensionapp:pensionasset_detail' pk=target_pension_asset_transaction.pension_asset.pk %}" class="btn btn-light">취소</a>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

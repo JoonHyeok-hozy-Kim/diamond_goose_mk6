@@ -6,4 +6,4 @@ from assetmasterapp.models import Asset
 class AssetCreationForm(ModelForm):
     class Meta:
         model = Asset
-        fields = ['asset_type','market', 'ticker', 'name', 'currency', 'image']
+        fields = ['asset_type','market', 'ticker', 'name', 'currency', 'image', 'pension_non_risk_asset_flag']

@@ -28,6 +28,7 @@ class Equity(models.Model):
     def update_equity_data(self):
         self.update_quantity_amount_prices()
         self.update_rate_of_returns()
+        self.refresh_from_db()
 
     def update_quantity_amount_prices(self):
         query = Q(transaction_type='BUY')

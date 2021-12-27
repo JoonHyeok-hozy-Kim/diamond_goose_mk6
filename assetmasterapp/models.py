@@ -36,6 +36,8 @@ class Asset(models.Model):
 
     current_price = models.FloatField(default=0, null=False)
 
+    pension_non_risk_asset_flag = models.BooleanField(default=False, null=False)
+
     def update_current_price(self):
         yfinance_markets = ['NASDAQ', 'NYSE', 'KSE']
         result_current_price = 0

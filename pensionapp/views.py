@@ -11,8 +11,9 @@ from django.views.generic.edit import FormMixin, DeleteView
 
 from assetmasterapp.models import Asset
 from dashboardapp.models import Dashboard
-from pensionapp.forms import PensionCreationForm, PensionTransactionCreationForm, PensionAssetCreationForm
-from pensionapp.models import Pension, PensionTransaction, PensionAsset
+from pensionapp.forms import PensionCreationForm, PensionTransactionCreationForm, PensionAssetCreationForm, \
+    PensionAssetTransactionCreationForm
+from pensionapp.models import Pension, PensionTransaction, PensionAsset, PensionAssetTransaction
 
 
 class PensionCreateView(CreateView):
@@ -48,7 +49,7 @@ class PensionDetailView(DetailView, FormMixin):
         context = super(PensionDetailView, self).get_context_data(**kwargs)
 
         # Update Pension Stats
-        self.object.calculate_total_paid_amount()
+        self.object.update_parameters()
         self.object.refresh_from_db()
 
         context.update({'my_pension_pk': self.object.pk})
@@ -180,3 +181,49 @@ class PensionAssetDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('pensionapp:pension_detail', kwargs={'pk': self.request.POST['pension_pk']})
+
+
+class PensionAssetDetailView(DetailView, FormMixin):
+    model = PensionAsset
+    context_object_name = 'target_pension_asset'
+    form_class = PensionAssetTransactionCreationForm
+    template_name = 'pensionapp/pensionasset_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PensionAssetDetailView, self).get_context_data(**kwargs)
+        # Update Asset's current price
+        self.object.asset.update_current_price()
+        self.object.asset.refresh_from_db()
+
+        # Update Pension Asset's stats
+        self.object.update_pension_asset_data()
+        self.object.refresh_from_db()
+
+        target_pension = self.object.pension
+        context.update({'target_pension': target_pension})
+
+        return context
+
+
+class PensionAssetTransactionCreateView(CreateView):
+    model = PensionAssetTransaction
+    form_class = PensionAssetTransactionCreationForm
+    template_name = 'pensionapp/pensionassettransaction_create.html'
+
+    def form_valid(self, form):
+        temp_transaction = form.save(commit=False)
+        temp_transaction.pension_asset = PensionAsset.objects.get(pk=self.request.POST['pension_asset_pk'])
+        temp_transaction.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('pensionapp:pensionasset_detail', kwargs={'pk': self.object.pension_asset.pk})
+
+
+class PensionAssetTransactionDeleteView(DeleteView):
+    model = PensionAssetTransaction
+    context_object_name = 'target_pension_asset_transaction'
+    template_name = 'pensionapp/pensionassettransaction_delete.html'
+
+    def get_success_url(self):
+        return reverse('pensionapp:pensionasset_detail', kwargs={'pk': self.object.pension_asset.pk})

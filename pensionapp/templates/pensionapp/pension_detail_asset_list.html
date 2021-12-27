@@ -37,7 +37,11 @@
         </tr>
         {% for pension_asset in pension_asset_list %}
             <tr>
-                <td style="border: 1px solid white; text-align: start;">{{ pension_asset.asset.name }}</td>
+                <td style="border: 1px solid white; text-align: start;">
+                    <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="color: #FFFFFF;">
+                        {{ pension_asset.asset.name }}
+                    </a>
+                </td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.asset.current_price|currency_krw }}</td>
                 <td style="border: 1px solid white; text-align: center;">{{ pension_asset.quantity }}</td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.total_amount|currency_krw }}</td>
@@ -48,5 +52,14 @@
                 </td>
             </tr>
         {% endfor %}
+        <tr>
+            <td style="border: 1px solid white; text-align: start;">현금(Cash)</td>
+            <td style="border: 1px solid white; text-align: center;">N/A</td>
+            <td style="border: 1px solid white; text-align: center;">N/A</td>
+            <td style="border: 1px solid white; text-align: end;">{{ pension.total_cash_amount|currency_krw }}</td>
+            <td style="border: 1px solid white; text-align: center;">N/A</td>
+            <td style="border: 1px solid white; text-align: center;">N/A</td>
+            <td style="border: 1px solid white; text-align: center;"></td>
+        </tr>
     </table>
 </div>

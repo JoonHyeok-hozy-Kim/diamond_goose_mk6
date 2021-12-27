@@ -33,7 +33,7 @@ class EquityCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('equityapp:equity_detail', kwargs={'pk':self.object.asset.pk})
+        return reverse('equityapp:equity_detail', kwargs={'pk':self.object.pk})
 
 
 @method_decorator(has_equity_ownership, 'get')
@@ -78,6 +78,15 @@ class EquityListView(ListView):
     model = Equity
     context_object_name = 'target_equity_list'
     template_name = 'equityapp/equity_list.html'
+
+
+class EquityDeleteView(DeleteView):
+    model = Equity
+    context_object_name = 'target_equity'
+    template_name = 'equityapp/equity_delete.html'
+
+    def get_success_url(self):
+        return reverse('portfolioapp:detail', kwargs={'pk': self.object.portfolio.pk})
 
 
 class EquityTransactionCreateView(CreateView):
