@@ -14,6 +14,7 @@ from dashboardapp.models import Dashboard
 from pensionapp.forms import PensionCreationForm, PensionTransactionCreationForm, PensionAssetCreationForm, \
     PensionAssetTransactionCreationForm
 from pensionapp.models import Pension, PensionTransaction, PensionAsset, PensionAssetTransaction
+from portfolioapp.models import Portfolio
 
 
 class PensionCreateView(CreateView):
@@ -24,7 +25,8 @@ class PensionCreateView(CreateView):
     def form_valid(self, form):
         temp_pension = form.save(commit=False)
         temp_pension.owner = self.request.user
-        temp_pension.dashboard = Dashboard.objects.get(owner=self.request.user)
+        # temp_pension.dashboard = Dashboard.objects.get(owner=self.request.user)
+        temp_pension.portfolio = Portfolio.objects.get(owner=self.request.user)
         temp_pension.save()
 
         return super().form_valid(form)
@@ -37,6 +39,15 @@ class PensionListView(ListView):
     model = Pension
     context_object_name = 'pension_list'
     template_name = 'pensionapp/pension_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(PensionListView, self).get_context_data(**kwargs)
+
+        queryset_my_portfolio = Portfolio.objects.get(owner=self.request.user)
+        my_portfolio_pk = queryset_my_portfolio.pk
+        context.update({'my_portfolio_pk': my_portfolio_pk})
+
+        return context
 
 
 class PensionDetailView(DetailView, FormMixin):

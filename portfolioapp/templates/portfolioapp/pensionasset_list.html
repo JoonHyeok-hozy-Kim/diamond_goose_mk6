@@ -1,0 +1,36 @@
+{% load format_masks2 %}
+
+{% for pension_asset in queryset_my_pension_asset %}
+    <tr style="background-color: #92D050; color: #000000; ">
+        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.asset.asset_type }}</td>
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #000000;">
+                {{ pension_asset.asset.ticker }}</a></td>
+        <td style="text-align: start; border: 1px solid black;">
+            <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #000000;">
+                [{{ pension_asset.pension.pension_type }}]
+                {{ pension_asset.asset.name|asset_name_omit }}</a></td>
+        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.asset.currency }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.quantity }}</td>
+        {% if pension_asset.asset.currency == 'USD' %}
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.asset.current_price|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_mv|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_fifo|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.total_amount|currency_usd }}</td>
+        {% elif pension_asset.asset.currency == 'KRW' %}
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.asset.current_price|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_mv|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_fifo|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.total_amount|currency_krw }}</td>
+        {% else %}
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.asset.current_price|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_mv|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.average_purchase_price_fifo|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ pension_asset.total_amount|intcomma }}</td>
+        {% endif %}
+        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.rate_of_return_mv|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.rate_of_return_fifo|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;"></td>
+    </tr>
+{% endfor %}
+

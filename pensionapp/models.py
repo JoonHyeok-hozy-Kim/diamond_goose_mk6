@@ -18,7 +18,7 @@ PENSION_TYPES = (
 
 class Pension(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pension')
-    dashboard = models.ForeignKey(Dashboard, on_delete=models.CASCADE, related_name='pension')
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='pension')
 
     pension_type = models.CharField(max_length=30, choices=PENSION_TYPES, null=False)
     total_paid_amount = models.FloatField(default=0, null=False)
@@ -183,7 +183,7 @@ class PensionAsset(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 for i in range(int(transaction_data['quantity'])):
                     transaction_amount_list.append(transaction_data['price'])
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 for i in range(int(transaction_data['quantity'])):
                     transaction_amount_list.pop(0)
 

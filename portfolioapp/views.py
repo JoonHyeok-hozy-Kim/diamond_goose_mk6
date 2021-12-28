@@ -4,9 +4,10 @@ from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 
 from dashboardapp.models import Dashboard
+from pensionapp.models import PensionAsset, Pension
 from portfolioapp.decorators import portfolio_ownership_required
 from portfolioapp.forms import PortfolioCreationForm
 from portfolioapp.models import Portfolio
@@ -37,3 +38,13 @@ class PortfolioDetailView(DetailView):
     model = Portfolio
     context_object_name = 'target_portfolio'
     template_name = 'portfolioapp/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PortfolioDetailView, self).get_context_data(**kwargs)
+
+        queryset_my_pension_asset = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
+        context.update({'queryset_my_pension_asset': queryset_my_pension_asset})
+
+        return context
+
+

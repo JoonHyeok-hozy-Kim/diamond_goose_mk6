@@ -11,9 +11,6 @@
         <div style="display: inline-block;">
             <a href="{% url 'pensionapp:pension_list' %}" class="btn btn-light btn-sm">연금 목록</a>
         </div>
-{#        <div style="display: inline-block;">#}
-{#            <a href="{% url 'pensionapp:pensionasset_list' pension_pk=my_pension_pk %}" class="btn btn-light btn-sm">종목 추가</a>#}
-{#        </div>#}
     </div>
 
     <div style="margin: 2rem;">
@@ -25,10 +22,10 @@
         <div style="display: block; height: 2rem;"></div>
     
         <div style="color:#FFFFFF;">
-            <div style="display: block; width: 40%; float: left; margin-right: 1rem;">
+            <div style="display: inline-block; width: 40%; float: left; margin-right: 1rem;">
                 {% include 'pensionapp/pensiontransaction_detail.html' with pension=target_pension %}
             </div>
-            <div style="display: inline-block; border: 1px solid white; width: 50%;">
+            <div style="display: inline-block; height: 28rem; border: 1px solid white; width: 50%;">
                 Pension Statistics
             </div>
         </div>
