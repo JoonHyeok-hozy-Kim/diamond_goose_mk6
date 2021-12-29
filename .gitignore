@@ -81,4 +81,3 @@ __pycache__/
 .env
 
 media/
-Dockerfile
