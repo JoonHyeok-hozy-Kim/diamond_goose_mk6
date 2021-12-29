@@ -167,9 +167,9 @@ MEDIA_URL = '/media/'
 ## 웹페이지에서 미디어를 저장할 위치를 지정 (위의 미디어 디렉토리로 잡아놓음.)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-OPEN_API = {
-    'exim_bank': env('EXIM_BANK_API_KEY'),
-    'upbit': {'access_key': env('UPBIT_ACCESS_KEY'), 'secret_key': env('UPBIT_SECRET_KEY')},
-}
+# OPEN_API = {
+#     'exim_bank': env('EXIM_BANK_API_KEY'),
+#     'upbit': {'access_key': env('UPBIT_ACCESS_KEY'), 'secret_key': env('UPBIT_SECRET_KEY')},
+# }
 
 
