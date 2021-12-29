@@ -25,7 +25,6 @@ class PensionCreateView(CreateView):
     def form_valid(self, form):
         temp_pension = form.save(commit=False)
         temp_pension.owner = self.request.user
-        # temp_pension.dashboard = Dashboard.objects.get(owner=self.request.user)
         temp_pension.portfolio = Portfolio.objects.get(owner=self.request.user)
         temp_pension.save()
 

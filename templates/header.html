@@ -7,10 +7,6 @@
         </div>
 
         <div style="font-size: 1.5rem;">
-            <a href="{% url 'accountapp:temp_welcome' %}" class="link-info" style="text-decoration-line: none;">
-                <span>Temp Welcome</span>
-            </a> |
-
             {% if user.is_authenticated %}
                 {% if user.dashboard %}
                     <a href="{% url 'dashboardapp:detail' pk=user.pk %}" class="link-info" style="text-decoration-line: none;">

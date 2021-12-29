@@ -22,7 +22,7 @@ def temp_welcome_view(request):
 class AccountCreateView(CreateView):
     model = User
     form_class = UserCreationForm
-    success_url = reverse_lazy('accountapp:temp_welcome')
+    success_url = reverse_lazy('accountapp:login')
     template_name = 'accountapp/account_create.html'
 
 
@@ -32,8 +32,10 @@ class AccountUpdateView(UpdateView):
     model = User
     form_class = AccountUpdateForm
     context_object_name = 'target_user'
-    success_url = reverse_lazy('accountapp:temp_welcome')
     template_name = 'accountapp/account_update.html'
+
+    def get_success_url(self):
+        return reverse('accountapp:account_detail', kwargs={'pk': self.object.user.pk})
 
 
 @method_decorator(has_account_ownership,'get')
@@ -41,7 +43,7 @@ class AccountUpdateView(UpdateView):
 class AccountDeleteView(DeleteView):
     model = User
     context_object_name = 'target_user'
-    success_url = reverse_lazy('accountapp:temp_welcome')
+    success_url = reverse_lazy('accountapp:account_create')
     template_name = 'accountapp/account_delete.html'
 
 

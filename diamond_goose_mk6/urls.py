@@ -18,7 +18,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from assetmasterapp.views import AssetListView
+
 urlpatterns = [
+    path('', AssetListView.as_view(), name='home'),
 
     path('admin/', admin.site.urls),
     path('accounts/', include('accountapp.urls')),
@@ -27,7 +30,6 @@ urlpatterns = [
     path('portfolio/', include('portfolioapp.urls')),
     path('equities/', include('equityapp.urls')),
     path('pensions/', include('pensionapp.urls')),
-    # path('profiles/', include('profileapp.urls')),
     # path('articles/', include('articleapp.urls')),
     # path('comments/', include('commentapp.urls')),
     # path('equitytransactions/', include('equitytransactionapp.urls')),

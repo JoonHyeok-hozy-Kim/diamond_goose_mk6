@@ -31,6 +31,9 @@ class Pension(models.Model):
     risk_ratio = models.FloatField(default=0.7, null=True)
     current_risk_asset_ratio = models.FloatField(default=0, null=True)
 
+    def __str__(self):
+        return f'{self.pension_type}'
+
     def update_parameters(self):
         self.calculate_total_paid_amount()
         self.calculate_total_current_value_total_cash_amount_current_risk_asset_ratio()
