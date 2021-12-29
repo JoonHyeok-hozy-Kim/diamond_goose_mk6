@@ -13,8 +13,9 @@
     <div style="margin: 2rem 2rem">
         <div style="margin: 1rem auto;">
             <div style="display: block; margin-bottom: 1rem;">
-                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">
-                    My Portfolio</a>
+                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info">
+                    <span class="material-icons">table_chart</span>
+                </a>
             </div>
         </div>
         <div style="display: inline-block; margin: 1rem auto;">
@@ -61,7 +62,7 @@
                                         <th class="equitytransaction_table_th">제비용</th>
                                         <th class="equitytransaction_table_th">제세금</th>
                                         <th class="equitytransaction_table_th">비고</th>
-                                        <th class="equitytransaction_table_th_delete">삭제</th>
+                                        <th class="equitytransaction_table_th_delete"><span class="material-icons">delete</span></th>
                                     </tr>
 
                                     {% include 'equityapp/equitytransaction_list.html' with transaction_list=target_equity.transaction.all|dictsortreversed:"transaction_date" target_currency=target_equity.asset.currency %}

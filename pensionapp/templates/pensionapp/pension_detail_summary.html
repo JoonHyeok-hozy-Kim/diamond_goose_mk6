@@ -28,7 +28,9 @@
             <th rowspan="2" style="border: 1px solid black; text-align: center; font-size: larger; font-weight: bolder;">
                 {{ pension.pension_type }}
                 {% if list_flag %}
-                    <a href="{% url 'pensionapp:pension_detail' pk=pension.pk %}" class="btn btn-dark btn-sm">관리</a>
+                    <a href="{% url 'pensionapp:pension_detail' pk=pension.pk %}" class="btn btn-dark btn-sm">
+                        <span class="material-icons">tune</span>
+                    </a>
                 {% endif %}
             </th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">현재규모</th>

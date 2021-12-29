@@ -33,7 +33,7 @@
                     <th style="text-align: center;">유형</th>
                     <th style="text-align: center;">금액</th>
                     <th style="text-align: center;">일자</th>
-                    <th style="text-align: center;">삭제</th>
+                    <th style="text-align: center;"><span class="material-icons">delete</span></th>
                 </tr>
                 {% for transaction in pension.pension_transaction.all|dictsortreversed:"transaction_date" %}
                     <tr style="color: #FFFFFF;">

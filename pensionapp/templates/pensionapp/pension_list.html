@@ -10,8 +10,12 @@
     <div style="margin: 2rem;">
         <div style="width:100%;">
             <div style="display: block; margin-bottom: 0.5rem;">
-                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info btn-sm" style="display: inline-block;" >My Portfolio</a>
-                <a href="{% url 'pensionapp:pension_create' %}" class="btn btn-light btn-sm" style="display: inline-block;" >연금상품 추가</a>
+                <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info btn-sm" style="display: inline-block;" >
+                    <span class="material-icons">table_chart</span>
+                </a>
+                <a href="{% url 'pensionapp:pension_create' %}" class="btn btn-light btn-sm" style="display: inline-block;" >
+                    <span class="material-icons">add</span>
+                </a>
             </div>
             <div style="display: block;">
                 <h3 class="pensionapp_main_title" style="width: 16rem;">Pension Summary</h3>

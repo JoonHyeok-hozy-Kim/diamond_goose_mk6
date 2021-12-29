@@ -7,13 +7,12 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/pensionapp.css' %}">
     {% endblock %}
 
-    <div style="margin: 1rem;">
-        <div style="display: inline-block;">
-            <a href="{% url 'pensionapp:pension_list' %}" class="btn btn-light btn-sm">연금 목록</a>
-        </div>
-    </div>
-
     <div style="margin: 2rem;">
+        <div style="margin-bottom: 1rem;">
+            <a href="{% url 'pensionapp:pension_list' %}" class="btn btn-light btn-sm">
+                <span class="material-icons">list</span>
+            </a>
+        </div>
         <div style="color: #FFFFFF;">
             {% include 'pensionapp/pension_detail_summary.html' with pension=target_pension %}
             {% include 'pensionapp/pension_detail_asset_list.html' with pension=target_pension pension_asset_list=pension_asset_list %}

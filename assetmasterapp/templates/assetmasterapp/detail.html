@@ -12,11 +12,20 @@
     <div style="margin: 2rem 2rem">
         <div style="margin: 1rem auto;">
             <div style="display: block; margin-bottom: 1rem;">
-                <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light" style="display: inline">자산 목록</a>
-                <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">수정하기</a>
-                <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light" style="display: inline">삭제하기</a>
+                <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light">
+                    <span class="material-icons">arrow_back</span>
+                </a>
+                <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light">
+                    <span class="material-icons">edit</span>
+                </a>
+                <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light">
+                    <span class="material-icons">delete</span>
+                </a>
+
                 {% if user.is_authenticated and my_portfolio_pk %}
-                    <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info" style="display: inline">My Portfolio</a>
+                    <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info">
+                        <span class="material-icons">table_chart</span>
+                    </a>
                 {% endif %}
             </div>
         </div>

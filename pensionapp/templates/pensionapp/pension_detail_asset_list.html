@@ -26,14 +26,19 @@
         {% endif %}
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">
                 종목명
-                <a href="{% url 'pensionapp:pensionasset_list' pension_pk=pension.pk %}" class="btn btn-dark btn-sm">추가</a>
+                <a href="{% url 'pensionapp:pensionasset_list' pension_pk=pension.pk %}">
+                    <span class="material-icons"
+                          style="box-shadow: 0 0 1px black; padding: 0.2rem; background-color: black; color: #FFFFFF">add</span>
+                </a>
             </th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">현재가</th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">보유량</th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">현재보유가치</th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">평균매입단가</th>
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">자본이득률</th>
-            <th style="border: 1px solid black; text-align: center; font-weight: bolder; background-color: #FA0067; color: #FFFFFF;">삭제</th>
+            <th style="border: 1px solid black; text-align: center; font-weight: bolder; background-color: #FA0067; color: #FFFFFF;">
+                <span class="material-icons">delete</span>
+            </th>
         </tr>
         {% for pension_asset in pension_asset_list %}
             <tr>

@@ -17,7 +17,9 @@
         <div style="margin: 1rem;">
             <div style="display: inline-block">
                 {% if target_portfolio_pk %}
-                    <a href="{% url 'portfolioapp:detail' pk=target_portfolio_pk %}" class="btn btn-info">My Portfolio</a>
+                    <a href="{% url 'portfolioapp:detail' pk=target_portfolio_pk %}" class="btn btn-info">
+                        <span class="material-icons">table_chart</span>
+                    </a>
                 {% else %}
                     {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}
                 {% endif %}
