@@ -1,8 +1,10 @@
 {% load format_masks2 %}
 
 {% for pension_asset in queryset_my_pension_asset %}
-    <tr style="background-color: #92D050; color: #000000; ">
-        <td style="text-align: center; border: 1px solid black;">{{ pension_asset.asset.asset_type }}</td>
+    <tr style="background-color: #92D050; color: #081321; ">
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'pensionapp:pension_list' %}" style="text-decoration: none; color: #000000;">{{ pension_asset.asset.asset_type }}</a>
+        </td>
         <td style="text-align: center; border: 1px solid black;">
             <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #000000;">
                 {{ pension_asset.asset.ticker }}</a></td>
@@ -30,7 +32,9 @@
         {% endif %}
         <td style="text-align: center; border: 1px solid black;">{{ pension_asset.rate_of_return_mv|percentage_rate_format }}</td>
         <td style="text-align: center; border: 1px solid black;">{{ pension_asset.rate_of_return_fifo|percentage_rate_format }}</td>
-        <td style="text-align: center; border: 1px solid black;"></td>
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'pensionapp:pensionasset_delete' pk=pension_asset.pk %}" style="text-decoration: none; color: #FA0067;">X</a>
+        </td>
     </tr>
 {% endfor %}
 

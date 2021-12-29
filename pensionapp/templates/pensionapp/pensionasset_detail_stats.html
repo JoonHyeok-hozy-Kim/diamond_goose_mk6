@@ -18,7 +18,7 @@
             {{ asset.ticker }}
         </h5>
         <h5 style="display: inline; background-color: #92D050; color:#000000;">
-            {{ pension_asset.pension.pension_type }}
+            <a href="{% url 'pensionapp:pension_detail' pk=pension_asset.pension.pk %}" style="text-decoration: none; color: #081321;">{{ pension_asset.pension.pension_type }}</a>
         </h5>
     </div>
     <div style="margin: 1rem 1rem;">
