@@ -9,12 +9,11 @@ from django.shortcuts import render
 # Create your views here.
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, DetailView
-from django.views.generic.edit import FormMixin, UpdateView, DeleteView
+from django.views.generic.edit import  UpdateView, DeleteView
 from django.utils.text import Truncator
 
 from assetmasterapp.forms import AssetCreationForm
 from assetmasterapp.models import Asset
-from diamond_goose_mk6.settings import MEDIA_ROOT
 from equityapp.models import Equity
 from portfolioapp.models import Portfolio
 
