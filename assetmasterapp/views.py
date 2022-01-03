@@ -55,33 +55,34 @@ class AssetDetailView(DetailView):
 
         context = super(AssetDetailView, self).get_context_data(**kwargs)
 
-        my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()
-        if my_portfolio_scalar_query:
-            for my_portfolio in my_portfolio_scalar_query:
-                my_portfolio_pk = my_portfolio['id']
-                target_user_id = my_portfolio['owner_id']
-            context.update({'my_portfolio_pk': my_portfolio_pk})
-            context.update({'target_user_id': target_user_id})
+        if self.request.user.is_authenticated:
+            my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()
+            if my_portfolio_scalar_query:
+                for my_portfolio in my_portfolio_scalar_query:
+                    my_portfolio_pk = my_portfolio['id']
+                    target_user_id = my_portfolio['owner_id']
+                context.update({'my_portfolio_pk': my_portfolio_pk})
+                context.update({'target_user_id': target_user_id})
 
-            my_asset_pk = None
-            if self.object.asset_type == 'EQUITY':
-                my_equity_scalar_query = Equity.objects.filter(asset=self.object.pk,
-                                                               portfolio=my_portfolio_pk,
-                                                               owner=self.request.user).values()
-                if my_equity_scalar_query:
-                    for my_equity in my_equity_scalar_query:
-                        my_asset_pk = my_equity['asset_id']
+                my_asset_pk = None
+                if self.object.asset_type == 'EQUITY':
+                    my_equity_scalar_query = Equity.objects.filter(asset=self.object.pk,
+                                                                   portfolio=my_portfolio_pk,
+                                                                   owner=self.request.user).values()
+                    if my_equity_scalar_query:
+                        for my_equity in my_equity_scalar_query:
+                            my_asset_pk = my_equity['asset_id']
 
-            elif self.object.asset_type == 'GUARDIAN':
-                None
-            elif self.object.asset_type == 'REITS':
-                None
-            elif self.object.asset_type == 'PENSION':
-                None
-            elif self.object.asset_type == 'CRYPTO':
-                None
-            if my_asset_pk:
-                context.update({'my_asset_pk': my_asset_pk})
+                elif self.object.asset_type == 'GUARDIAN':
+                    None
+                elif self.object.asset_type == 'REITS':
+                    None
+                elif self.object.asset_type == 'PENSION':
+                    None
+                elif self.object.asset_type == 'CRYPTO':
+                    None
+                if my_asset_pk:
+                    context.update({'my_asset_pk': my_asset_pk})
         return context
 
 

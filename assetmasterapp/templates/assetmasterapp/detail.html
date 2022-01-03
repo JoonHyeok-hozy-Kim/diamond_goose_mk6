@@ -15,14 +15,14 @@
                 <a href="{% url 'assetmasterapp:list' %}" class="btn btn-light">
                     <span class="material-icons">arrow_back</span>
                 </a>
-                <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light">
-                    <span class="material-icons">edit</span>
-                </a>
-                <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light">
-                    <span class="material-icons">delete</span>
-                </a>
 
                 {% if user.is_authenticated and my_portfolio_pk %}
+                    <a href="{% url 'assetmasterapp:update' pk=target_asset.pk %}" class="btn btn-light">
+                        <span class="material-icons">edit</span>
+                    </a>
+                    <a href="{% url 'assetmasterapp:delete' pk=target_asset.pk %}" class="btn btn-light">
+                        <span class="material-icons">delete</span>
+                    </a>
                     <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info">
                         <span class="material-icons">table_chart</span>
                     </a>
