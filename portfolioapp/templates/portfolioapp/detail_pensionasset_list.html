@@ -1,16 +1,16 @@
 {% load format_masks2 %}
 
-{% for pension_asset in queryset_my_pension_asset %}
-    <tr style="background-color: #92D050; color: #081321; ">
+<td rowspan="{{ asset_count_pension_asset }}"
+    style="text-align: center; border: 1px solid black; background-color: #92D050; color: #081321; font-weight: bold;">
+    <a href="{% url 'pensionapp:pension_list' %}" style="text-decoration: none; color: #081321;">PENSION</a>
+</td>
+{% for pension_asset in queryset_my_pension_assets %}
+    <tr style="background-color: #92D050; color: #081321; font-weight: bold;">
         <td style="text-align: center; border: 1px solid black;">
-            <a href="{% url 'pensionapp:pension_list' %}" style="text-decoration: none; color: #000000;">{{ pension_asset.asset.asset_type }}</a>
-        </td>
-        <td style="text-align: center; border: 1px solid black;">
-            <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #000000;">
-                {{ pension_asset.asset.ticker }}</a></td>
+            <a href="{% url 'pensionapp:pension_detail' pk=pension_asset.pension.pk %}" style="text-decoration: none; color: #081321;">
+                {{ pension_asset.pension.pension_type }}</a></td>
         <td style="text-align: start; border: 1px solid black;">
-            <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #000000;">
-                [{{ pension_asset.pension.pension_type }}]
+            <a href="{% url 'pensionapp:pensionasset_detail' pk=pension_asset.pk %}" style="text-decoration: none; color: #081321;">
                 {{ pension_asset.asset.name|asset_name_omit }}</a></td>
         <td style="text-align: center; border: 1px solid black;">{{ pension_asset.asset.currency }}</td>
         <td style="text-align: center; border: 1px solid black;">{{ pension_asset.quantity }}</td>

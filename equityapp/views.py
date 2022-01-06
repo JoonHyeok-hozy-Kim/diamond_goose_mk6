@@ -54,30 +54,13 @@ class EquityDetailView(DetailView, FormMixin):
 
         context = super(EquityDetailView, self).get_context_data(**kwargs)
 
-        my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()
-        if my_portfolio_scalar_query:
-            for my_portfolio in my_portfolio_scalar_query:
-                my_portfolio_pk = my_portfolio['id']
-                target_user_id = my_portfolio['owner_id']
-            context.update({'my_portfolio_pk': my_portfolio_pk})
-            context.update({'target_user_id': target_user_id})
+        my_portfolio_pk = self.object.portfolio.pk
+        context.update({'my_portfolio_pk': my_portfolio_pk})
 
-            my_equity_scalar_query = Equity.objects.filter(asset=self.object.pk,
-                                                           portfolio=my_portfolio_pk,
-                                                           owner=self.request.user).values()
-            if my_equity_scalar_query:
-                for my_equity in my_equity_scalar_query:
-                    my_equity_pk = my_equity['id']
-                context.update({'my_equity_pk': my_equity_pk})
+        my_equity_transactions = EquityTransaction.objects.filter(equity=self.object.pk).order_by('-transaction_date')
+        context.update({'my_equity_transactions': my_equity_transactions})
 
         return context
-
-
-@method_decorator(has_equity_ownership, 'get')
-class EquityListView(ListView):
-    model = Equity
-    context_object_name = 'target_equity_list'
-    template_name = 'equityapp/equity_list.html'
 
 
 class EquityDeleteView(DeleteView):

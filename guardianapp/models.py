@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django import utils
 
 # Create your models here.
 from django.db.models import Q
@@ -9,10 +8,10 @@ from assetmasterapp.models import Asset
 from portfolioapp.models import Portfolio
 
 
-class Equity(models.Model):
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='equity', null=False)
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='equity', null=False)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='equity', null=False)
+class Guardian(models.Model):
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='guardian', null=False)
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='guardian', null=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='guardian', null=False)
 
     quantity = models.FloatField(default=0, null=False)
     total_amount = models.FloatField(default=0, null=False)
@@ -25,7 +24,7 @@ class Equity(models.Model):
     creation_date = models.DateTimeField(auto_now=True)
     last_update_date = models.DateTimeField(auto_now_add=True)
 
-    def update_equity_data(self):
+    def update_guardian_data(self):
         self.update_quantity_amount_prices()
         self.refresh_from_db()
         self.update_rate_of_returns()
@@ -37,7 +36,7 @@ class Equity(models.Model):
         query.add(Q(quantity__gt=0),Q.AND)
 
         transaction_data_set = self.transaction.filter(query).values()
-        equity = Equity.objects.filter(pk=self.pk)
+        guardian = Guardian.objects.filter(pk=self.pk)
 
         # quantity
         final_quantity = 0
@@ -47,11 +46,11 @@ class Equity(models.Model):
             else:
                 final_quantity -= transaction_data['quantity']
 
-        equity.update(quantity=final_quantity)
+        guardian.update(quantity=final_quantity)
 
         # amount
         current_price = self.asset.current_price
-        equity.update(total_amount=final_quantity*current_price)
+        guardian.update(total_amount=final_quantity*current_price)
 
         # average_purchase_price_mv
         temp_qty = 0
@@ -68,7 +67,7 @@ class Equity(models.Model):
 
         if temp_qty < 0: average_purchase_price_mv = -999
         elif temp_qty > 0: average_purchase_price_mv = temp_amt/temp_qty
-        equity.update(average_purchase_price_mv=average_purchase_price_mv)
+        guardian.update(average_purchase_price_mv=average_purchase_price_mv)
 
         # average_purchase_price_fifo
         transaction_amount_list = []
@@ -88,7 +87,7 @@ class Equity(models.Model):
 
         if temp_qty > 0: average_purchase_price_fifo = temp_amt/temp_qty
         else: average_purchase_price_fifo = 0
-        equity.update(average_purchase_price_fifo=average_purchase_price_fifo)
+        guardian.update(average_purchase_price_fifo=average_purchase_price_fifo)
 
         return {
             'quantity': final_quantity,
@@ -98,23 +97,22 @@ class Equity(models.Model):
         }
 
     def update_rate_of_returns(self):
-        equity = Equity.objects.filter(pk=self.pk)
+        guardian = Guardian.objects.filter(pk=self.pk)
 
         rate_of_return_mv = 0
         if self.average_purchase_price_mv > 0:
             rate_of_return_mv = (self.asset.current_price - self.average_purchase_price_mv)/self.average_purchase_price_mv
-        equity.update(rate_of_return_mv=rate_of_return_mv)
+        guardian.update(rate_of_return_mv=rate_of_return_mv)
 
         rate_of_return_fifo = 0
         if self.average_purchase_price_fifo > 0:
             rate_of_return_fifo = (self.asset.current_price - self.average_purchase_price_fifo)/self.average_purchase_price_fifo
-        equity.update(rate_of_return_fifo=rate_of_return_fifo)
+        guardian.update(rate_of_return_fifo=rate_of_return_fifo)
 
         return{
             'rate_of_return_mv': rate_of_return_mv,
             'rate_of_return_fifo': rate_of_return_fifo,
         }
-
 
 TRANSACTION_TYPE_CHOICES = (
     ('BUY', '매수'),
@@ -135,8 +133,10 @@ class MinValueFloat(models.FloatField):
         return super(MinValueFloat, self).formfield(**defaults)
 
 
-class EquityTransaction(models.Model):
-    equity = models.ForeignKey(Equity, on_delete=models.CASCADE, related_name='transaction', null=False)
+class GuardianTransaction(models.Model):
+    from django import utils
+
+    guardian = models.ForeignKey(Guardian, on_delete=models.CASCADE, related_name='transaction', null=False)
 
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPE_CHOICES, null=False)
     quantity = MinValueFloat(min_value=0.0, null=False)

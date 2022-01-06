@@ -22,7 +22,7 @@ def percentage_rate_format(amount):
     return result
 
 def asset_name_omit(asset_name):
-    return Truncator(asset_name).chars(16)
+    return Truncator(asset_name).chars(31)
 
 register.filter('currency_usd', currency_usd)
 register.filter('currency_krw', currency_krw)

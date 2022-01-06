@@ -7,6 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView
 
 from dashboardapp.models import Dashboard
+from equityapp.models import Equity
+from guardianapp.models import Guardian
 from pensionapp.models import PensionAsset, Pension
 from portfolioapp.decorators import portfolio_ownership_required
 from portfolioapp.forms import PortfolioCreationForm
@@ -42,8 +44,17 @@ class PortfolioDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PortfolioDetailView, self).get_context_data(**kwargs)
 
-        queryset_my_pension_asset = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
-        context.update({'queryset_my_pension_asset': queryset_my_pension_asset})
+        queryset_my_equities = Equity.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+        context.update({'queryset_my_equities': queryset_my_equities})
+        context.update({'asset_count_equity': queryset_my_equities.count()+1})
+
+        queryset_my_guardians = Guardian.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+        context.update({'queryset_my_guardians': queryset_my_guardians})
+        context.update({'asset_count_guardian': queryset_my_guardians.count()+1})
+
+        queryset_my_pension_assets = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
+        context.update({'queryset_my_pension_assets': queryset_my_pension_assets})
+        context.update({'asset_count_pension_asset': queryset_my_pension_assets.count()+1})
 
         return context
 

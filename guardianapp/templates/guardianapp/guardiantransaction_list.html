@@ -1,0 +1,35 @@
+{% load format_masks %}
+
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/equityapp.css' %}">
+{% endblock %}
+
+{% for transaction in transaction_list %}
+    <tr>
+        <td class= "equitytransaction_table_td_center">{{ transaction.transaction_date|date:"Y-m-d h:i:s" }}</td>
+        <td class= "equitytransaction_table_td_center">{{ transaction.transaction_type }}</td>
+        <td class= "equitytransaction_table_td_center">{{ transaction.quantity }}</td>
+
+        {% if target_currency == 'USD' %}
+            <td class= "equitytransaction_table_td_center">{{ transaction.price|currency_usd }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_fee|currency_usd  }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_tax|currency_usd  }}</td>
+        {% elif target_currency == 'KRW' %}
+            <td class= "equitytransaction_table_td_center">{{ transaction.price|currency_krw }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_fee|currency_krw  }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_tax|currency_krw  }}</td>
+        {% else %}
+            <td class= "equitytransaction_table_td_center">{{ transaction.price|floatformat:2|intcomma }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_fee|floatformat:2|intcomma  }}</td>
+            <td class= "equitytransaction_table_td_center">{{ transaction.transaction_tax|floatformat:2|intcomma  }}</td>
+        {% endif %}
+
+        <td class= "equitytransaction_table_td_start">{{ transaction.note }}</td>
+        <td class= "equitytransaction_table_td_center">
+            <a href="{% url 'guardianapp:guardiantransaction_delete' pk=transaction.pk %}"
+               style="color: #FA0067;text-decoration: none;">X</a>
+        </td>
+
+    </tr>
+{% endfor %}

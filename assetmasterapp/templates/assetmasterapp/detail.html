@@ -73,6 +73,9 @@
                                     {% include 'equityapp/equity_create.html' with asset=target_asset %}
                                 {% endif %}
                             {% elif target_asset.asset_type == 'GUARDIAN' %}
+                                {% if my_asset_pk != target_asset.pk %}
+                                    {% include 'guardianapp/guardian_create.html' with asset=target_asset %}
+                                {% endif %}
                             {% elif target_asset.asset_type == 'REITS' %}
                             {% elif target_asset.asset_type == 'PENSION' %}
 {#                                <a href="{% url 'pensionapp:pensionasset_create' asset_pk=target_asset.pk %}" class="btn btn-info">Open Pension Position</a>#}

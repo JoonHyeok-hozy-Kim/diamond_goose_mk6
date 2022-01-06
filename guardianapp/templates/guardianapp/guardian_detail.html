@@ -16,27 +16,28 @@
                 <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info">
                     <span class="material-icons">table_chart</span>
                 </a>
-                <a href="{% url 'equityapp:equity_delete' pk=target_equity.pk %}" class="btn btn-light">
-                    <span class="material-icons">delete</span>
-                </a>
             </div>
         </div>
+
         <div style="display: inline-block; margin: 1rem auto;">
-            {% include 'equityapp/equity_stats.html' with asset=target_equity.asset equity=target_equity %}
+            {% include 'guardianapp/guardian_stats.html' with asset=target_guardian.asset guardian=target_guardian %}
         </div>
+
         <div>
             <div style="display: block;">
                 <h3 style=" color: #FFFFFF;">Transactions</h3>
                 <div style="display: block; width: 100%;">
                     <div style="display: block; width: 20%; float: left; margin-right: 0.5%;">
                         <div style="margin-bottom: 1rem;">
-                            {% include 'equityapp/equitytransaction_create.html' with equity=target_equity %}
+                            {% include 'guardianapp/guardiantransaction_create.html' with guardian=target_guardian %}
                         </div>
                         <div style="display: inline-block;">
-                            {% include 'equityapp/equitytransaction_export_csv_template.html' with equity=target_equity %}
+{#                            {% include 'equityapp/equitytransaction_export_csv_template.html' with equity=target_equity %}#}
+                            equitytransaction_export_csv_template
                         </div>
                         <div>
-                            {% include 'equityapp/equitytransaction_import_csv.html' with equity=target_equity %}
+{#                            {% include 'equityapp/equitytransaction_import_csv.html' with equity=target_equity %}#}
+                            equitytransaction_import_csv
                         </div>
                     </div>
                     <div style="display: inline-block; width: 79.5%;">
@@ -68,7 +69,7 @@
                                         <th class="equitytransaction_table_th_delete"><span class="material-icons">delete</span></th>
                                     </tr>
 
-                                    {% include 'equityapp/equitytransaction_list.html' with transaction_list=my_equity_transactions target_currency=target_equity.asset.currency %}
+                                    {% include 'guardianapp/guardiantransaction_list.html' with transaction_list=my_guardian_transactions target_currency=target_guardian.asset.currency %}
                                 </table>
                             </div>
                         </div>

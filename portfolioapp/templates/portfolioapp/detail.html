@@ -54,8 +54,8 @@
                 <table style="border: 1px solid black;  color: #FFFFFF;">
                     <colgroup>
                         <col span="1" style="width: 6rem;">
-                        <col span="1" style="width: 4rem;">
-                        <col span="1" style="width: 18rem;">
+                        <col span="1" style="width: 4.5rem;">
+                        <col span="1" style="width: 17rem;">
                         <col span="1" style="width: 3rem;">
                         <col span="1" style="width: 4.5rem;">
                         <col span="1" style="width: 7rem;">
@@ -81,8 +81,9 @@
 
                         <th style="border: 1px solid black; background-color: #FA0067; color: #FFFFFF;"><span class="material-icons">delete</span></th>
                     </tr>
-                    {% include 'equityapp/equity_list.html' with portfolio=target_portfolio %}
-                    {% include 'portfolioapp/pensionasset_list.html' %}
+                    {% include 'portfolioapp/detail_equity_list.html' %}
+                    {% include 'portfolioapp/detail_guardian_list.html' %}
+                    {% include 'portfolioapp/detail_pensionasset_list.html' %}
                 </table>
 
             </div>

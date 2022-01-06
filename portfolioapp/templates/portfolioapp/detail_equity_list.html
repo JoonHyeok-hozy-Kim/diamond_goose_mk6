@@ -1,0 +1,39 @@
+{% load format_masks %}
+
+<td rowspan="{{ asset_count_equity }}"
+    style="text-align: center; border: 1px solid black; background-color: #264257;">EQUITY</td>
+
+{% for equity in queryset_my_equities %}
+    <tr style="background-color: #264257;">
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'equityapp:equity_detail' pk=equity.pk %}" style="text-decoration: none; color: #FFFFFF;">
+                {{ equity.asset.ticker }}</a></td>
+        <td style="text-align: start; border: 1px solid black;">
+            <a href="{% url 'equityapp:equity_detail' pk=equity.pk %}" style="text-decoration: none; color: #FFFFFF;">
+                {{ equity.asset.name|asset_name_omit }}</a></td>
+        <td style="text-align: center; border: 1px solid black;">{{ equity.asset.currency }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ equity.quantity }}</td>
+        {% if equity.asset.currency == 'USD' %}
+            <td style="text-align: end; border: 1px solid black;">{{ equity.asset.current_price|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_mv|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_fifo|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.total_amount|currency_usd }}</td>
+        {% elif equity.asset.currency == 'KRW' %}
+            <td style="text-align: end; border: 1px solid black;">{{ equity.asset.current_price|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_mv|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_fifo|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.total_amount|currency_krw }}</td>
+        {% else %}
+            <td style="text-align: end; border: 1px solid black;">{{ equity.asset.current_price|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_mv|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_fifo|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ equity.total_amount|intcomma }}</td>
+        {% endif %}
+        <td style="text-align: center; border: 1px solid black;">{{ equity.rate_of_return_mv|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ equity.rate_of_return_fifo|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'equityapp:equity_delete' pk=equity.pk %}" style="text-decoration: none; color: #FA0067;">X</a>
+        </td>
+    </tr>
+{% endfor %}
+
