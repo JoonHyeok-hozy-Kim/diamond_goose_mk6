@@ -1,9 +1,12 @@
 {% load format_masks2 %}
 
-<td rowspan="{{ asset_count_pension_asset }}"
-    style="text-align: center; border: 1px solid black; background-color: #92D050; color: #081321; font-weight: bold;">
-    <a href="{% url 'pensionapp:pension_list' %}" style="text-decoration: none; color: #081321;">PENSION</a>
-</td>
+{% if asset_count_pension_asset > 1 %}
+    <td rowspan="{{ asset_count_pension_asset }}"
+        style="text-align: center; border: 1px solid black; background-color: #92D050; color: #081321; font-weight: bold;">
+        <a href="{% url 'pensionapp:pension_list' %}" style="text-decoration: none; color: #081321;">PENSION</a>
+    </td>
+{% endif %}
+
 {% for pension_asset in queryset_my_pension_assets %}
     <tr style="background-color: #92D050; color: #081321; font-weight: bold;">
         <td style="text-align: center; border: 1px solid black;">

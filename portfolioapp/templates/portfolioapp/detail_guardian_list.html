@@ -1,9 +1,12 @@
 {% load format_masks2 %}
 
-<td rowspan="{{ asset_count_guardian }}"
-    style="text-align: center; border: 1px solid black; background-color: #FF9C00; color: #081321; font-weight: bold;">
-    <a href="" style="text-decoration: none; color: #000000;">GUARDIAN</a>
-</td>
+{% if asset_count_guardian > 1 %}
+    <td rowspan="{{ asset_count_guardian }}"
+        style="text-align: center; border: 1px solid black; background-color: #FF9C00; color: #081321; font-weight: bold;">
+        <a href="" style="text-decoration: none; color: #000000;">GUARDIAN</a>
+    </td>
+{% endif %}
+
 {% for guardian in queryset_my_guardians %}
     <tr style="background-color: #FF9C00; color: #081321; font-weight: bold;">
         <td style="text-align: center; border: 1px solid black;">

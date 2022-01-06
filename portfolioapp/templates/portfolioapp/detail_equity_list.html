@@ -1,7 +1,9 @@
 {% load format_masks %}
 
-<td rowspan="{{ asset_count_equity }}"
-    style="text-align: center; border: 1px solid black; background-color: #264257;">EQUITY</td>
+{% if asset_count_equity > 1 %}
+    <td rowspan="{{ asset_count_equity }}"
+        style="text-align: center; border: 1px solid black; background-color: #264257;">EQUITY</td>
+{% endif %}
 
 {% for equity in queryset_my_equities %}
     <tr style="background-color: #264257;">
