@@ -14,6 +14,7 @@ from django.utils.text import Truncator
 
 from assetmasterapp.forms import AssetCreationForm
 from assetmasterapp.models import Asset
+from cryptoapp.models import Crypto
 from equityapp.models import Equity
 from guardianapp.models import Guardian
 from portfolioapp.models import Portfolio
@@ -87,7 +88,12 @@ class AssetDetailView(DetailView):
                 elif self.object.asset_type == 'PENSION':
                     None
                 elif self.object.asset_type == 'CRYPTO':
-                    None
+                    queryset_my_crypto = Crypto.objects.filter(asset=self.object.pk,
+                                                               portfolio=my_portfolio_pk,
+                                                               owner=self.request.user)
+                    if queryset_my_crypto:
+                        for my_crypto in queryset_my_crypto:
+                            my_asset_pk = my_crypto.asset.pk
 
                 if my_asset_pk:
                     context.update({'my_asset_pk': my_asset_pk})

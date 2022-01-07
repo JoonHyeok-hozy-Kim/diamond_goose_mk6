@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
 # Create your views here.
@@ -32,7 +33,8 @@ class GuardianCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('guardianapp:guardian_detail', kwargs={'pk': self.object.pk})
+        # return reverse('guardianapp:guardian_detail', kwargs={'pk': self.object.pk})
+        return reverse('portfolioapp:detail', kwargs={'pk': self.object.portfolio.pk})
 
 
 @method_decorator(has_guardian_ownership, 'get')
@@ -79,6 +81,10 @@ class GuardianTransactionCreateView(CreateView):
     def form_valid(self, form):
         temp_transaction = form.save(commit=False)
         temp_transaction.guardian = Guardian.objects.get(pk=self.request.POST['guardian_pk'])
+
+        if temp_transaction.transaction_type == 'SELL' and temp_transaction.quantity > temp_transaction.guardian.quantity:
+            return HttpResponseNotFound('Cannot SELL more than you hold.')
+
         temp_transaction.save()
         return super().form_valid(form)
 

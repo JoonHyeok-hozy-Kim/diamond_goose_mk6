@@ -1,0 +1,9 @@
+{% load bootstrap4 %}
+
+<form action="{% url 'cryptoapp:crypto_create' %} " method="post">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        <input type="submit" class="btn btn-info" value="Open Crypto Position" style="display: inline">
+    {% endif %}
+    <input type="hidden" name="asset_pk" value="{{ asset.pk }}">
+</form>

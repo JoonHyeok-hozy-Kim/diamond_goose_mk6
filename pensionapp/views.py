@@ -1,7 +1,7 @@
 import json
 
 from django.db.models import QuerySet, Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 
 # Create your views here.
@@ -170,11 +170,9 @@ class PensionAssetCreateView(CreateView):
         request_dict = self.request.__dict__['path'].split('/')
         asset_pk = request_dict[-1]
         temp_pension_asset.asset = Asset.objects.get(pk=asset_pk)
-        print('temp_pension_asset.asset : ', temp_pension_asset.asset)
 
         pension_pk = request_dict[-2]
         temp_pension_asset.pension = Pension.objects.get(pk=pension_pk)
-        print('temp_pension_asset.pension : ', temp_pension_asset.pension)
         temp_pension_asset.save()
 
         return super().form_valid(form)
@@ -223,6 +221,10 @@ class PensionAssetTransactionCreateView(CreateView):
     def form_valid(self, form):
         temp_transaction = form.save(commit=False)
         temp_transaction.pension_asset = PensionAsset.objects.get(pk=self.request.POST['pension_asset_pk'])
+
+        if temp_transaction.transaction_type == 'SELL' and temp_transaction.quantity > temp_transaction.pension_asset.quantity:
+            return HttpResponseNotFound('Cannot SELL more than you hold.')
+
         temp_transaction.save()
         return super().form_valid(form)
 

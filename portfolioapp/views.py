@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView
 
+from cryptoapp.models import Crypto
 from dashboardapp.models import Dashboard
 from equityapp.models import Equity
 from guardianapp.models import Guardian
@@ -56,6 +57,8 @@ class PortfolioDetailView(DetailView):
         context.update({'queryset_my_pension_assets': queryset_my_pension_assets})
         context.update({'asset_count_pension_asset': queryset_my_pension_assets.count()+1})
 
+        queryset_my_cryptoes = Crypto.objects.filter(owner=self.request.user)
+        context.update({'queryset_my_cryptoes': queryset_my_cryptoes})
+        context.update({'asset_count_cryptoes': queryset_my_cryptoes.count()+1})
+
         return context
-
-
