@@ -36,7 +36,9 @@ class Pension(models.Model):
 
     def update_parameters(self):
         self.calculate_total_paid_amount()
+        self.refresh_from_db()
         self.calculate_total_current_value_total_cash_amount_current_risk_asset_ratio()
+        self.refresh_from_db()
         self.calculate_total_profit_amount_rate_of_return()
         self.refresh_from_db()
 
@@ -132,6 +134,7 @@ class PensionAsset(models.Model):
 
     def update_pension_asset_data(self):
         self.update_quantity_amount_prices()
+        self.refresh_from_db()
         self.update_rate_of_returns()
         self.refresh_from_db()
 
