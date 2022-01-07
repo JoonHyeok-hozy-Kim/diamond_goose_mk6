@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -82,3 +83,37 @@ class PortfolioDetailView(DetailView):
         context.update({'asset_count_reits': queryset_my_reits.count()+1})
 
         return context
+
+
+# def portfolio_refresh(request):
+#
+#     print('request.path : ', request.path)
+#     my_portfolio_pk = request.POST['portfolio_pk']
+#     print('In portfolio_refresh, my_portfolio_pk :', my_portfolio_pk)
+#
+#     queryset_my_equities = Equity.objects.filter(owner=request.user, portfolio=my_portfolio_pk)
+#     for equity in queryset_my_equities:
+#         equity.asset.update_current_price()
+#         equity.update_equity_data()
+#
+#     queryset_my_guardians = Guardian.objects.filter(owner=request.user, portfolio=my_portfolio_pk)
+#     for guardian in queryset_my_guardians:
+#         guardian.asset.update_current_price()
+#         guardian.update_guardian_data()
+#
+#     queryset_my_pension_assets = PensionAsset.objects.filter(owner=request.user).order_by('pension')
+#     for pension_asset in queryset_my_pension_assets:
+#         pension_asset.asset.update_current_price()
+#         pension_asset.update_pension_asset_data()
+#
+#     queryset_my_cryptoes = Crypto.objects.filter(owner=request.user)
+#     for crypto in queryset_my_cryptoes:
+#         crypto.asset.update_current_price()
+#         crypto.update_crypto_data()
+#
+#     queryset_my_reits = Reits.objects.filter(owner=request.user)
+#     for reits in queryset_my_reits:
+#         reits.asset.update_current_price()
+#         reits.update_reits_data()
+#
+#     return render(request, 'portfolioapp/detail.html', context={'pk': my_portfolio_pk})

@@ -10,6 +10,7 @@ from django.views.generic.edit import FormMixin
 from dashboardapp.decorators import dashboard_ownership_required
 from dashboardapp.forms import DashboardCreationForm
 from dashboardapp.models import Dashboard
+from exchangeapp.models import MyExchange
 from portfolioapp.forms import PortfolioCreationForm
 from portfolioapp.models import Portfolio
 
@@ -43,9 +44,16 @@ class DashboardDetailView(DetailView, FormMixin):
     def get_context_data(self, **kwargs):
         context = super(DashboardDetailView, self).get_context_data(**kwargs)
 
-        my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()
-        if my_portfolio_scalar_query:
-            for my_portfolio in my_portfolio_scalar_query:
-                context.update({'target_portfolio_pk': my_portfolio['id']})
+        queryset_my_portfolio = Portfolio.objects.filter(owner=self.request.user,
+                                                         dashboard=self.object.pk)
+        if queryset_my_portfolio:
+            for portfolio in queryset_my_portfolio:
+                context.update({'target_portfolio_pk': portfolio.pk})
+
+        queryset_my_exchange = MyExchange.objects.filter(owner=self.request.user,
+                                                         dashboard=self.object.pk)
+        if queryset_my_exchange:
+            for exchange in queryset_my_exchange:
+                context.update({'my_exchange_pk': exchange.pk})
 
         return context
