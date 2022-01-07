@@ -24,8 +24,13 @@ def percentage_rate_format(amount):
 def asset_name_omit(asset_name):
     return Truncator(asset_name).chars(31)
 
+def int_number(amount):
+    amount = round(float(amount))
+    return "%s" % (intcomma(int(amount)))
+
 register.filter('currency_usd', currency_usd)
 register.filter('currency_krw', currency_krw)
 register.filter('percentage_rate_format', percentage_rate_format)
 register.filter('asset_name_omit', asset_name_omit)
 register.filter('intcomma', intcomma)
+register.filter('int_number', int_number)

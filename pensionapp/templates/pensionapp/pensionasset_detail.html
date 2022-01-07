@@ -13,8 +13,12 @@
     <div style="margin: 2rem 2rem">
         <div style="margin: 1rem auto;">
             <div style="display: block; margin-bottom: 1rem;">
-                <a href="{% url 'pensionapp:pension_detail' pk=target_pension.pk %}" class="btn btn-info" style="display: inline">
-                    My Pension</a>
+                <a href="{% url 'pensionapp:pension_detail' pk=target_pension.pk %}" class="btn btn-info" >
+                    My Pension
+                </a>
+                <a href="{% url 'pensionapp:pensionasset_delete' pk=target_pension_asset.pk %}" class="btn btn-light btn-sm">
+                    <span class="material-icons">delete</span>
+                </a>
             </div>
         </div>
         <div style="display: inline-block; margin: 1rem auto;">

@@ -1,4 +1,5 @@
 {% load format_masks %}
+{% load format_masks2 %}
 
 {% load static %}
 {% block extrahead %}
@@ -9,7 +10,7 @@
     <tr>
         <td class= "equitytransaction_table_td_center">{{ transaction.transaction_date|date:"Y-m-d h:i:s" }}</td>
         <td class= "equitytransaction_table_td_center">{{ transaction.transaction_type }}</td>
-        <td class= "equitytransaction_table_td_center">{{ transaction.quantity }}</td>
+        <td class= "equitytransaction_table_td_center">{{ transaction.quantity|int_number }}</td>
 
         {% if target_currency == 'USD' %}
             <td class= "equitytransaction_table_td_center">{{ transaction.price|currency_usd }}</td>

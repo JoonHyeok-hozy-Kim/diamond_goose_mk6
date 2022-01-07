@@ -1,0 +1,48 @@
+{% load format_masks %}
+{% load format_masks2 %}
+
+{% if asset_count_reits > 1 %}
+    <td rowspan="{{ asset_count_reits }}"
+        style="text-align: center; border: .5px solid black; background-color: #328BAB; color: #081321; font-weight: bolder;">REITS</td>
+{% endif %}
+
+{% for reits in queryset_my_reits %}
+    <tr style="background-color: #328BAB; color: #081321; font-weight: bolder;">
+        <td style="text-align: center; border: .5px solid black;">
+            <a href="{% url 'reitsapp:reits_detail' pk=reits.pk %}" style="text-decoration: none; color: #081321; font-weight: bolder;">
+                {{ reits.asset.ticker }}
+            </a>
+        </td>
+        <td style="text-align: start; border: 1px solid black;">
+            <a href="{% url 'reitsapp:reits_detail' pk=reits.pk %}" style="text-decoration: none; color: #081321; font-weight: bolder;">
+                {{ reits.asset.name|asset_name_omit }}
+            </a>
+        </td>
+        <td style="text-align: center; border: 1px solid black;">{{ reits.asset.currency }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ reits.quantity|int_number }}</td>
+        {% if reits.asset.currency == 'USD' %}
+            <td style="text-align: end; border: 1px solid black;">{{ reits.asset.current_price|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_mv|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_fifo|currency_usd }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.total_amount|currency_usd }}</td>
+        {% elif reits.asset.currency == 'KRW' %}
+            <td style="text-align: end; border: 1px solid black;">{{ reits.asset.current_price|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_mv|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_fifo|currency_krw }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.total_amount|currency_krw }}</td>
+        {% else %}
+            <td style="text-align: end; border: 1px solid black;">{{ reits.asset.current_price|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_mv|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.average_purchase_price_fifo|intcomma }}</td>
+            <td style="text-align: end; border: 1px solid black;">{{ reits.total_amount|intcomma }}</td>
+        {% endif %}
+        <td style="text-align: center; border: 1px solid black;">{{ reits.rate_of_return_mv|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ reits.rate_of_return_fifo|percentage_rate_format }}</td>
+        <td style="text-align: center; border: 1px solid black;">
+            <a href="{% url 'reitsapp:reits_delete' pk=reits.pk %}" style="text-decoration: none; color: #081321;">
+                X
+            </a>
+        </td>
+    </tr>
+{% endfor %}
+

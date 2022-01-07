@@ -32,6 +32,7 @@ urlpatterns = [
     path('pensions/', include('pensionapp.urls')),
     path('guardians/', include('guardianapp.urls')),
     path('cryptoes/', include('cryptoapp.urls')),
+    path('reits/', include('reitsapp.urls')),
     # path('articles/', include('articleapp.urls')),
     # path('comments/', include('commentapp.urls')),
     # path('equitytransactions/', include('equitytransactionapp.urls')),

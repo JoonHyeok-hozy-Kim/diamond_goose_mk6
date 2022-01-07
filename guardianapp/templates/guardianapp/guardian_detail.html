@@ -16,6 +16,9 @@
                 <a href="{% url 'portfolioapp:detail' pk=my_portfolio_pk %}" class="btn btn-info">
                     <span class="material-icons">table_chart</span>
                 </a>
+                <a href="{% url 'guardianapp:guardian_delete' pk=target_guardian.pk %}" class="btn btn-light">
+                    <span class="material-icons">delete</span>
+                </a>
             </div>
         </div>
 

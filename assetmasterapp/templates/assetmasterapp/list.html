@@ -41,16 +41,14 @@
             {% for asset in query_asset_list %}
                 {% if asset.asset_type == 'EQUITY' %}
                     <div style="background-color: #264257;">
-                {% elif asset.asset_type == 'ETF' %}
-                    <div style="background-color: #0080F0;">
                 {% elif asset.asset_type == 'GUARDIAN' %}
-                    <div style="background-color: #FF9C00;">
+                    <div style="background-color: #FFC000;">
                 {% elif asset.asset_type == 'REITS' %}
-                    <div style="background-color: #00C484;">
+                    <div style="background-color: #328BAB;">
                 {% elif asset.asset_type == 'PENSION' %}
-                    <div style="background-color: #92D050;">
+                    <div style="background-color: #00C484;">
                 {% elif asset.asset_type == 'CRYPTO' %}
-                    <div style="background-color: #F001A3;">
+                    <div style="background-color: #7A3156;">
                 {% endif %}
                         <a href="{% url 'assetmasterapp:detail' pk=asset.id %}">
                             {% include 'snippets/asset_card.html' with asset=asset %}

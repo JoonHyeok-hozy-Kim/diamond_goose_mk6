@@ -20,7 +20,7 @@ has_crypto_ownership = [login_required, crypto_ownership_required]
 class CryptoCreateView(CreateView):
     model = Crypto
     form_class = CryptoCreationForm
-    template_name = 'crypto/crypto_create.html'
+    template_name = 'cryptoapp/crypto_create.html'
 
     def form_valid(self, form):
         temp_crypto = form.save(commit=False)

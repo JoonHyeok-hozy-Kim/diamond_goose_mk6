@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'pensionapp',
     'guardianapp',
     'cryptoapp',
+    'reitsapp',
     # 'articleapp',
     # 'commentapp',
     # 'equitytransactionapp',

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load format_masks %}
+
+{% block content %}
+
+    {% load static %}
+    {% block extrahead %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/equityapp.css' %}">
+    {% endblock %}
+
+    <div style="max-width: 500px; margin: 4rem auto">
+        <div style="margin: 2rem 0;">
+            <h4 class="equitytransaction_main_title">Delete Reits</h4>
+            <h6 style="color: #FFFFFF;">Are you sure to delete this reits asset?</h6>
+            <div style="width: 30rem; background-color: #264257;">
+                <table class="equitytransaction_delete_inverted_table">
+                    <tr class="equitytransaction_delete_inverted_table_tr">
+                        <th class="equitytransaction_delete_inverted_table_th">자산이름</th>
+                        <th class="equitytransaction_delete_inverted_table_th">시장</th>
+                        <th class="equitytransaction_delete_inverted_table_th">거래통화</th>
+                        <th class="equitytransaction_delete_inverted_table_th">보유수량</th>
+                        <th class="equitytransaction_delete_inverted_table_th">총보유가치</th>
+                        <th class="equitytransaction_delete_inverted_table_th">평균매입단가(MV)</th>
+                        <th class="equitytransaction_delete_inverted_table_th">수익률(MV)</th>
+                    </tr>
+                    <tr class="equitytransaction_delete_inverted_table_tr">
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.asset.name }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.asset.market }}</td>
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.asset.currency }}</td>
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.quantity }}</td>
+
+                        {% if target_reits.asset.currency == 'USD' %}
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.total_amount|currency_usd  }}</td>
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.average_purchase_price_mv|currency_usd  }}</td>
+                        {% elif target_reits.asset.currency == 'KRW' %}
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.total_amount|currency_krw  }}</td>
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.average_purchase_price_mv|currency_krw  }}</td>
+                        {% else %}
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.total_amount|floatformat:2|intcomma  }}</td>
+                            <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.average_purchase_price_mv|floatformat:2|intcomma  }}</td>
+                        {% endif %}
+
+                        <td class="equitytransaction_delete_inverted_table_td">{{ target_reits.rate_of_return_mv|percentage_rate_format }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="text-white">
+            <form action="{% url 'reitsapp:reits_delete' pk=target_reits.pk %}" method="post">
+                {% csrf_token %}
+                <input type="submit" class="btn btn-dark">
+                <a href="{% url 'portfolioapp:detail' pk=target_reits.portfolio.pk %}" class="btn btn-light">취소</a>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

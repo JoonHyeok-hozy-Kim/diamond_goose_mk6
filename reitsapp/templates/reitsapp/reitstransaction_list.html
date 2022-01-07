@@ -28,8 +28,9 @@
 
         <td class= "equitytransaction_table_td_start">{{ transaction.note }}</td>
         <td class= "equitytransaction_table_td_center">
-            <a href="{% url 'equityapp:equitytransaction_delete' pk=transaction.pk %}"
-               style="color: #FA0067;text-decoration: none;">X</a>
+            <a href="{% url 'reitsapp:reitstransaction_delete' pk=transaction.pk %}" style="color: #FA0067;text-decoration: none;">
+                X
+            </a>
         </td>
 
     </tr>

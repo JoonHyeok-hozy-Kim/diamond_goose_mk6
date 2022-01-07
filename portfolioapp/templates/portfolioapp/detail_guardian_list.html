@@ -2,21 +2,21 @@
 
 {% if asset_count_guardian > 1 %}
     <td rowspan="{{ asset_count_guardian }}"
-        style="text-align: center; border: 1px solid black; background-color: #FF9C00; color: #081321; font-weight: bold;">
+        style="text-align: center; border: .5px solid black; background-color: #FFC000; color: #081321; font-weight: bolder;">
         <a href="" style="text-decoration: none; color: #000000;">GUARDIAN</a>
     </td>
 {% endif %}
 
 {% for guardian in queryset_my_guardians %}
-    <tr style="background-color: #FF9C00; color: #081321; font-weight: bold;">
-        <td style="text-align: center; border: 1px solid black;">
+    <tr style="background-color: #FFC000; color: #081321; font-weight: bolder;">
+        <td style="text-align: center; border: .5px solid black;">
             <a href="{% url 'guardianapp:guardian_detail' pk=guardian.pk %}" style="text-decoration: none; color: #000000;">
                 {{ guardian.asset.ticker }}</a></td>
         <td style="text-align: start; border: 1px solid black;">
             <a href="{% url 'guardianapp:guardian_detail' pk=guardian.pk %}" style="text-decoration: none; color: #000000;">
                 {{ guardian.asset.name|asset_name_omit }}</a></td>
         <td style="text-align: center; border: 1px solid black;">{{ guardian.asset.currency }}</td>
-        <td style="text-align: center; border: 1px solid black;">{{ guardian.quantity }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ guardian.quantity|int_number }}</td>
         {% if guardian.asset.currency == 'USD' %}
             <td style="text-align: end; border: 1px solid black;">{{ guardian.asset.current_price|currency_usd }}</td>
             <td style="text-align: end; border: 1px solid black;">{{ guardian.average_purchase_price_mv|currency_usd }}</td>

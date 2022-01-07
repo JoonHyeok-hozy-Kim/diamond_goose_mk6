@@ -20,8 +20,7 @@ has_guardian_ownership = [login_required, guardian_ownership_required]
 class GuardianCreateView(CreateView):
     model = Guardian
     form_class = GuardianCreationForm
-    context_object_name = 'target_guardian'
-    template_name = 'guardian/guardian_create.html'
+    template_name = 'guardianapp/guardian_create.html'
 
     def form_valid(self, form):
         temp_guardian = form.save(commit=False)

@@ -14,6 +14,7 @@ from pensionapp.models import PensionAsset, Pension
 from portfolioapp.decorators import portfolio_ownership_required
 from portfolioapp.forms import PortfolioCreationForm
 from portfolioapp.models import Portfolio
+from reitsapp.models import Reits
 
 has_ownership = [login_required, portfolio_ownership_required]
 
@@ -60,5 +61,9 @@ class PortfolioDetailView(DetailView):
         queryset_my_cryptoes = Crypto.objects.filter(owner=self.request.user)
         context.update({'queryset_my_cryptoes': queryset_my_cryptoes})
         context.update({'asset_count_cryptoes': queryset_my_cryptoes.count()+1})
+
+        queryset_my_reits = Reits.objects.filter(owner=self.request.user)
+        context.update({'queryset_my_reits': queryset_my_reits})
+        context.update({'asset_count_reits': queryset_my_reits.count()+1})
 
         return context

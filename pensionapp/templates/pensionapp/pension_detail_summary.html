@@ -19,11 +19,11 @@
             {% endif %}
         </colgroup>
         {% if pension.pension_type == '퇴직연금' %}
-            <tr style="background-color: #FF9C00; color: #081321;">
+            <tr style="background-color: #005236; color: #081321;">
         {% elif pension.pension_type == '연금저축' %}
-            <tr style="background-color: #92D050; color: #081321;">
+            <tr style="background-color: #008558; color: #081321;">
         {% elif pension.pension_type == 'IRP' %}
-            <tr style="background-color: #00B0F0; color: #081321;">
+            <tr style="background-color: #00D18B; color: #081321;">
         {% endif %}
             <th rowspan="2" style="border: 1px solid black; text-align: center; font-size: larger; font-weight: bolder;">
                 {{ pension.pension_type }}

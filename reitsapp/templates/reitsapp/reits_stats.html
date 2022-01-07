@@ -49,9 +49,9 @@
                         <th class="assetmasterapp_inverted_table_th">수익률(FIFO)</th>
                     </tr>
                     <tr class="assetmasterapp_inverted_table_tr">
-                        <td class="assetmasterapp_inverted_table_td">{{ equity.quantity|int_number }}</td>
-                        <td class="assetmasterapp_inverted_table_td">{{ equity.rate_of_return_mv|percentage_rate_format }}</td>
-                        <td class="assetmasterapp_inverted_table_td">{{ equity.rate_of_return_fifo|percentage_rate_format }}</td>
+                        <td class="assetmasterapp_inverted_table_td">{{ reits.quantity|int_number }}</td>
+                        <td class="assetmasterapp_inverted_table_td">{{ reits.rate_of_return_mv|percentage_rate_format }}</td>
+                        <td class="assetmasterapp_inverted_table_td">{{ reits.rate_of_return_fifo|percentage_rate_format }}</td>
                     </tr>
                 </table>
             </div>
@@ -64,17 +64,17 @@
                     </tr>
                     <tr class="assetmasterapp_inverted_table_tr">
                         {% if asset.currency == 'USD' %}
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.total_amount|currency_usd }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_mv|currency_usd }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_fifo|currency_usd }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.total_amount|currency_usd }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_mv|currency_usd }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_fifo|currency_usd }}</td>
                         {% elif asset.currency == 'KRW' %}
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.total_amount|currency_krw }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_mv|currency_krw }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_fifo|currency_krw }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.total_amount|currency_krw }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_mv|currency_krw }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_fifo|currency_krw }}</td>
                         {% else %}
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.total_amount|intcomma }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_mv|intcomma }}</td>
-                            <td class="assetmasterapp_inverted_table_td">{{ equity.average_purchase_price_fifo|intcomma }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.total_amount|intcomma }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_mv|intcomma }}</td>
+                            <td class="assetmasterapp_inverted_table_td">{{ reits.average_purchase_price_fifo|intcomma }}</td>
                         {% endif %}
                     </tr>
                 </table>

@@ -1,5 +1,6 @@
 {% load static %}
 {% load format_masks %}
+{% load format_masks2 %}
 {% load bootstrap4 %}
 
 {% block extrahead %}
@@ -18,11 +19,11 @@
             <col span="1" style="width: 2.5rem;">
         </colgroup>
         {% if pension.pension_type == '퇴직연금' %}
-            <tr style="background-color: #FF9C00; color: #081321;">
+            <tr style="background-color: #005236; color: #081321;">
         {% elif pension.pension_type == '연금저축' %}
-            <tr style="background-color: #92D050; color: #081321;">
+            <tr style="background-color: #008558; color: #081321;">
         {% elif pension.pension_type == 'IRP' %}
-            <tr style="background-color: #00B0F0; color: #081321;">
+            <tr style="background-color: #00D18B; color: #081321;">
         {% endif %}
             <th style="border: 1px solid black; text-align: center; font-weight: bolder;">
                 종목명
@@ -48,7 +49,7 @@
                     </a>
                 </td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.asset.current_price|currency_krw }}</td>
-                <td style="border: 1px solid white; text-align: center;">{{ pension_asset.quantity }}</td>
+                <td style="border: 1px solid white; text-align: center;">{{ pension_asset.quantity|int_number }}</td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.total_amount|currency_krw }}</td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.average_purchase_price_mv|currency_krw }}</td>
                 <td style="border: 1px solid white; text-align: end;">{{ pension_asset.rate_of_return_mv|percentage_rate_format }}</td>

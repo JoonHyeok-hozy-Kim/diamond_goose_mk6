@@ -1,20 +1,21 @@
 {% load format_masks %}
+{% load format_masks2 %}
 
 {% if asset_count_equity > 1 %}
     <td rowspan="{{ asset_count_equity }}"
-        style="text-align: center; border: 1px solid black; background-color: #264257;">EQUITY</td>
+        style="text-align: center; border: .5px solid black; background-color: #264257; font-weight: bolder;">EQUITY</td>
 {% endif %}
 
 {% for equity in queryset_my_equities %}
-    <tr style="background-color: #264257;">
-        <td style="text-align: center; border: 1px solid black;">
+    <tr style="background-color: #264257; font-weight: bolder;">
+        <td style="text-align: center; border: .5px solid black;">
             <a href="{% url 'equityapp:equity_detail' pk=equity.pk %}" style="text-decoration: none; color: #FFFFFF;">
                 {{ equity.asset.ticker }}</a></td>
         <td style="text-align: start; border: 1px solid black;">
             <a href="{% url 'equityapp:equity_detail' pk=equity.pk %}" style="text-decoration: none; color: #FFFFFF;">
                 {{ equity.asset.name|asset_name_omit }}</a></td>
         <td style="text-align: center; border: 1px solid black;">{{ equity.asset.currency }}</td>
-        <td style="text-align: center; border: 1px solid black;">{{ equity.quantity }}</td>
+        <td style="text-align: center; border: 1px solid black;">{{ equity.quantity|int_number }}</td>
         {% if equity.asset.currency == 'USD' %}
             <td style="text-align: end; border: 1px solid black;">{{ equity.asset.current_price|currency_usd }}</td>
             <td style="text-align: end; border: 1px solid black;">{{ equity.average_purchase_price_mv|currency_usd }}</td>
