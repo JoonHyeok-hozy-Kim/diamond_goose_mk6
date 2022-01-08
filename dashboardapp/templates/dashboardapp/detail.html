@@ -25,18 +25,16 @@
                 {% endif %}
 
                 {% if my_exchange_pk %}
-                    <a href="{% url 'exchangeapp:detail' pk=my_exchange_pk %}" class="btn btn-info">
+                    <a href="{% url 'exchangeapp:myexchange_detail' pk=my_exchange_pk %}" class="btn btn-info">
                         <span class="material-icons">currency_exchange</span>
                     </a>
                 {% else %}
-                    <a href="{% url 'exchangeapp:create' %}" class="btn btn-info">
+                    <a href="{% url 'exchangeapp:myexchange_create' %}" class="btn btn-info">
                         Open Exchange
                     </a>
                 {% endif %}
             </div>
-
         </div>
-
     </div>
 
 

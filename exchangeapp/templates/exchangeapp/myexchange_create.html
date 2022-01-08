@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/exchangeapp.css' %}">
+{% endblock %}
+
+<div style="max-width: 500px; margin: 4rem auto">
+    <h3 class="exchangeapp_main_title">Start Exchange</h3>
+    <div style="background-color: #264257; color: #FFFFFF;">
+        <form action="{% url 'exchangeapp:myexchange_create' %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+                <input type="submit" class="btn btn-info" value="Create Portfolio">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

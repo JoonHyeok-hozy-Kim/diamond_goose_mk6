@@ -18,6 +18,9 @@
                 <a href="{% url 'dashboardapp:detail' pk=my_exchange.dashboard.pk %}" class="btn btn-info btn-sm">
                     <span class="material-icons">show_chart</span>
                 </a>
+                <a href="{% url 'exchangeapp:foreigncurrency_create' %}" class="btn btn-light btn-sm">
+                    <span class="material-icons">add</span>
+                </a>
                 <a href="" class="btn btn-light btn-sm">
                     <span class="material-icons">refresh</span>
                 </a>
@@ -39,10 +42,10 @@
                 </table>
             </div>
 
-            <div style="margin-bottom: 1rem;">
-                <a href="" class="btn btn-light btn-sm" style="display: inline-block">
-                    <span class="material-icons">add_box</span>
-                </a>
+            <div style="margin-bottom: 1rem; color: #FFFFFF;">
+                {% for foreigncurrency in queryset_foreigncurrencies %}
+                    {{ foreigncurrency.currency }}
+                {% endfor %}
             </div>
 
             <div style="margin-bottom: 1rem;">
