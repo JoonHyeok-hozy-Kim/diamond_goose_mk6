@@ -38,14 +38,16 @@ class ForeignCurrency(models.Model):
     exchange_rate_of_return_fifo = models.FloatField(default=0, null=False)
 
     def update_current_rate(self):
-        from diamond_goose_mk6.settings.local import EXIM_BANK_API_KEY as key_local
+
         from datetime import datetime
 
         url_list = ['https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?']
         url_list.append('authkey=')
-        if key_local:
-            url_list.append(key_local)
-        else:
+        try:
+            from diamond_goose_mk6.settings.local import EXIM_BANK_API_KEY as key_local
+            if key_local:
+                url_list.append(key_local)
+        except:
             from diamond_goose_mk6.settings.deploy import EXIM_BANK_API_KEY as key_deploy
             url_list.append(key_deploy)
         url_list.append('&searchdate=')
