@@ -43,7 +43,7 @@ class Crypto(models.Model):
         for transaction_data in transaction_data_set:
             if transaction_data['transaction_type'] == 'BUY':
                 final_quantity += transaction_data['quantity']
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 final_quantity -= transaction_data['quantity']
 
         crypto.update(quantity=final_quantity)
@@ -69,7 +69,7 @@ class Crypto(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 temp_qty += transaction_data['quantity']
                 temp_amt += transaction_data['quantity'] * transaction_data['price']
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 temp_price = temp_amt/temp_qty
                 temp_qty -= transaction_data['quantity']
                 temp_amt = temp_qty * temp_price
@@ -94,7 +94,7 @@ class Crypto(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 for i in range(int(transaction_data['quantity']*qty_digit_unit)):
                     transaction_amount_list.append(transaction_data['price'])
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 for i in range(int(transaction_data['quantity']*qty_digit_unit)):
                     transaction_amount_list.pop(0)
 

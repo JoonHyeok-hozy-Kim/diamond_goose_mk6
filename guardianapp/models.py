@@ -15,6 +15,8 @@ class Guardian(models.Model):
 
     quantity = models.FloatField(default=0, null=False)
     total_amount = models.FloatField(default=0, null=False)
+    total_dividend_amount = models.FloatField(default=0, null=False)
+
     average_purchase_price_mv = models.FloatField(default=0, null=False)
     average_purchase_price_fifo = models.FloatField(default=0, null=False)
 
@@ -33,24 +35,27 @@ class Guardian(models.Model):
     def update_quantity_amount_prices(self):
         query = Q(transaction_type='BUY')
         query.add(Q(transaction_type='SELL'),Q.OR)
+        query.add(Q(transaction_type='DIVIDEND'),Q.OR)
         query.add(Q(quantity__gt=0),Q.AND)
 
         transaction_data_set = self.transaction.filter(query).values()
         guardian = Guardian.objects.filter(pk=self.pk)
 
-        # quantity
+        # quantity and amount
         final_quantity = 0
+        total_dividend_amount = 0
         for transaction_data in transaction_data_set:
             if transaction_data['transaction_type'] == 'BUY':
                 final_quantity += transaction_data['quantity']
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 final_quantity -= transaction_data['quantity']
+            elif transaction_data['transaction_type'] == 'DIVIDEND':
+                total_dividend_amount += transaction_data['price']
 
         guardian.update(quantity=final_quantity)
-
-        # amount
         current_price = self.asset.current_price
         guardian.update(total_amount=final_quantity*current_price)
+        guardian.update(total_dividend_amount=total_dividend_amount)
 
         # average_purchase_price_mv
         temp_qty = 0
@@ -60,7 +65,7 @@ class Guardian(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 temp_qty += transaction_data['quantity']
                 temp_amt += transaction_data['quantity'] * transaction_data['price']
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 temp_price = temp_amt/temp_qty
                 temp_qty -= transaction_data['quantity']
                 temp_amt = temp_qty * temp_price
@@ -77,7 +82,7 @@ class Guardian(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 for i in range(int(transaction_data['quantity'])):
                     transaction_amount_list.append(transaction_data['price'])
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 for i in range(int(transaction_data['quantity'])):
                     transaction_amount_list.pop(0)
 
