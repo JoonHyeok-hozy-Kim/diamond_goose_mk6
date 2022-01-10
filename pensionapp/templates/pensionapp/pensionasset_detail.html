@@ -68,7 +68,7 @@
                                         <th class="equitytransaction_table_th_delete"><span class="material-icons">delete</span></th>
                                     </tr>
 
-                                    {% include 'pensionapp/pensionassettransaction_list.html' with transaction_list=target_pension_asset.transaction.all|dictsortreversed:"transaction_date" %}
+                                    {% include 'pensionapp/pensionassettransaction_list.html' with transaction_list=queryset_transaction_list %}
                                 </table>
                             </div>
                         </div>

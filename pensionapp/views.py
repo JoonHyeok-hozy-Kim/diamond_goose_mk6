@@ -210,6 +210,9 @@ class PensionAssetDetailView(DetailView, FormMixin):
         target_pension = self.object.pension
         context.update({'target_pension': target_pension})
 
+        queryset_transaction_list = PensionAssetTransaction.objects.filter(pension_asset=self.object.pk).order_by("-transaction_date")
+        context.update({'queryset_transaction_list': queryset_transaction_list})
+
         return context
 
 

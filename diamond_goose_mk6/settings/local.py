@@ -31,3 +31,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Open API Keys
+EXIM_BANK_API_KEY = env('EXIM_BANK_API_KEY')

@@ -1,15 +1,18 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, DeleteView
+from django.views.generic.edit import FormMixin
 
 from dashboardapp.models import Dashboard
 from exchangeapp.decorators import exchange_ownership_required
-from exchangeapp.forms import MyExchangeCreationForm, ForeignCurrencyCreationForm
-from exchangeapp.models import MyExchange, ForeignCurrency
+from exchangeapp.forms import MyExchangeCreationForm, ForeignCurrencyCreationForm, \
+    ForeignCurrencyTransactionCreationForm
+from exchangeapp.models import MyExchange, ForeignCurrency, ForeignCurrencyTransaction
 
 has_ownership = [login_required, exchange_ownership_required]
 
@@ -66,3 +69,59 @@ class ForeignCurrencyCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('exchangeapp:myexchange_detail', kwargs={'pk': self._my_exchange_pk})
+
+
+class ForeignCurrencyDeleteView(DeleteView):
+    model = ForeignCurrency
+    context_object_name = 'target_foreigncurrency'
+    template_name = 'exchangeapp/foreigncurrency_delete.html'
+
+    def get_success_url(self):
+        return reverse('exchangeapp:myexchange_detail', kwargs={'pk': self.request.POST['myexchange_pk']})
+
+
+class ForeignCurrencyDetailView(DetailView, FormMixin):
+    model = ForeignCurrency
+    context_object_name = 'target_foreign_currency'
+    form_class = ForeignCurrencyTransactionCreationForm
+    template_name = 'exchangeapp/foreigncurrency_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ForeignCurrencyDetailView, self).get_context_data(**kwargs)
+
+        queryset_transaction_list = ForeignCurrencyTransaction.objects.filter(foreign_currency=self.object.pk).order_by("-transaction_date")
+        context.update({'queryset_transaction_list': queryset_transaction_list})
+
+        # Update Exchange Rate up-to-date.
+        self.object.update_current_rate()
+        self.object.refresh_from_db()
+
+        return context
+
+
+class ForeignCurrencyTransactionCreateView(CreateView):
+    model = ForeignCurrencyTransaction
+    form_class = ForeignCurrencyTransactionCreationForm
+    template_name = 'exchangeapp/foreigncurrencytransaction_create.html'
+
+    def form_valid(self, form):
+        temp_transaction = form.save(commit=False)
+        temp_transaction.foreign_currency = ForeignCurrency.objects.get(pk=self.request.POST['foreign_currency_pk'])
+
+        if temp_transaction.transaction_type == 'SELL' and temp_transaction.quantity > temp_transaction.foreign_currency.quantity:
+            return HttpResponseNotFound('Cannot SELL more than you hold.')
+
+        temp_transaction.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('exchangeapp:foreigncurrency_detail', kwargs={'pk': self.object.foreign_currency.pk})
+
+
+class ForeignCurrencyTransactionDeleteView(DeleteView):
+    model = ForeignCurrencyTransaction
+    context_object_name = 'target_foreign_currency_transaction'
+    template_name = 'exchangeapp/foreigncurrencytransaction_delete.html'
+
+    def get_success_url(self):
+        return reverse('exchangeapp:foreigncurrency_detail', kwargs={'pk': self.object.foreign_currency.pk})

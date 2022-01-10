@@ -48,39 +48,49 @@ class PortfolioDetailView(DetailView):
         context = super(PortfolioDetailView, self).get_context_data(**kwargs)
 
         queryset_my_equities = Equity.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+        asset_count_equity = 1
         for equity in queryset_my_equities:
             equity.asset.update_current_price()
-            equity.update_equity_data()
+            # equity.update_equity_data()
+            asset_count_equity += 1
         context.update({'queryset_my_equities': queryset_my_equities})
-        context.update({'asset_count_equity': queryset_my_equities.count()+1})
+        context.update({'asset_count_equity': asset_count_equity})
 
         queryset_my_guardians = Guardian.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+        asset_count_guardian = 1
         for guardian in queryset_my_guardians:
             guardian.asset.update_current_price()
-            guardian.update_guardian_data()
+            # guardian.update_guardian_data()
+            asset_count_guardian += 1
         context.update({'queryset_my_guardians': queryset_my_guardians})
-        context.update({'asset_count_guardian': queryset_my_guardians.count()+1})
+        context.update({'asset_count_guardian': asset_count_guardian})
 
         queryset_my_pension_assets = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
+        asset_count_pension_asset = 1
         for pension_asset in queryset_my_pension_assets:
             pension_asset.asset.update_current_price()
-            pension_asset.update_pension_asset_data()
+            # pension_asset.update_pension_asset_data()
+            asset_count_pension_asset += 1
         context.update({'queryset_my_pension_assets': queryset_my_pension_assets})
-        context.update({'asset_count_pension_asset': queryset_my_pension_assets.count()+1})
+        context.update({'asset_count_pension_asset': asset_count_pension_asset})
 
         queryset_my_cryptoes = Crypto.objects.filter(owner=self.request.user)
+        asset_count_cryptoes = 1
         for crypto in queryset_my_cryptoes:
             crypto.asset.update_current_price()
-            crypto.update_crypto_data()
+            # crypto.update_crypto_data()
+            asset_count_cryptoes += 1
         context.update({'queryset_my_cryptoes': queryset_my_cryptoes})
-        context.update({'asset_count_cryptoes': queryset_my_cryptoes.count()+1})
+        context.update({'asset_count_cryptoes': asset_count_cryptoes})
 
         queryset_my_reits = Reits.objects.filter(owner=self.request.user)
+        asset_count_reits = 1
         for reits in queryset_my_reits:
             reits.asset.update_current_price()
-            reits.update_reits_data()
+            # reits.update_reits_data()
+            asset_count_reits += 1
         context.update({'queryset_my_reits': queryset_my_reits})
-        context.update({'asset_count_reits': queryset_my_reits.count()+1})
+        context.update({'asset_count_reits': asset_count_reits})
 
         return context
 

@@ -42,3 +42,6 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+# Open API Keys
+EXIM_BANK_API_KEY = read_secret('EXIM_BANK_API_KEY')
