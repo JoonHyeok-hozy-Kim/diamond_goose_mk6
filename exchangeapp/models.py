@@ -38,7 +38,6 @@ class ForeignCurrency(models.Model):
     exchange_rate_of_return_fifo = models.FloatField(default=0, null=False)
 
     def update_current_rate(self):
-
         from datetime import datetime
 
         url_list = ['https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?']
@@ -65,13 +64,108 @@ class ForeignCurrency(models.Model):
                 for char in result['deal_bas_r']:
                     if char != ',':
                         exchange_rate_char_list.append(char)
-                new_exchange_rate = float(''.join(exchange_rate_char_list))
+                new_exchange_rate = round(float(''.join(exchange_rate_char_list)), 2)
 
                 foreign_currency = ForeignCurrency.objects.filter(pk=self.pk)
                 foreign_currency.update(current_exchange_rate=new_exchange_rate)
                 break
 
         return new_exchange_rate
+
+    def update_quantity_amount_rates(self):
+        from django.db.models import Q
+        query = Q(transaction_type='BUY')
+        query.add(Q(transaction_type='SELL'),Q.OR)
+        query.add(Q(quantity__gt=0),Q.AND)
+
+        transaction_data_set = self.transaction.filter(query).values()
+        foreign_currency = ForeignCurrency.objects.filter(pk=self.pk)
+
+        # quantity and amount
+        final_amount = 0
+        max_qty_digit_for_fifo = 0
+        for transaction_data in transaction_data_set:
+
+            # Calculate max digit of quantity for FIFO calculation
+            qty_str_split_list = str(transaction_data['quantity']).split('.')
+            if len(qty_str_split_list) > 1:
+                qty_digit = len(qty_str_split_list[1])
+                if qty_digit > max_qty_digit_for_fifo:
+                    max_qty_digit_for_fifo = qty_digit
+
+            if transaction_data['transaction_type'] == 'BUY':
+                final_amount += transaction_data['quantity']
+            elif transaction_data['transaction_type'] == 'SELL':
+                final_amount -= transaction_data['quantity']
+
+        current_exchange_rate = self.current_exchange_rate
+        foreign_currency.update(current_amount=final_amount)
+
+        # accumulated_exchange_rate_mv
+        temp_val_in_foreign_currency = 0
+        temp_val_in_main_currency = 0
+        accumulated_exchange_rate_mv = 0
+        for transaction_data in transaction_data_set:
+            if transaction_data['transaction_type'] == 'BUY':
+                temp_val_in_foreign_currency += transaction_data['quantity']
+                temp_val_in_main_currency += transaction_data['quantity'] * transaction_data['exchange_rate']
+            elif transaction_data['transaction_type'] == 'SELL':
+                temp_exchange_rate = temp_val_in_main_currency/temp_val_in_foreign_currency
+                temp_val_in_foreign_currency -= transaction_data['quantity']
+                temp_val_in_main_currency = temp_val_in_foreign_currency * temp_exchange_rate
+
+        if temp_val_in_foreign_currency < 0:
+            accumulated_exchange_rate_mv = -999
+        elif temp_val_in_foreign_currency > 0:
+            accumulated_exchange_rate_mv = round(temp_val_in_main_currency/temp_val_in_foreign_currency, 2)
+        foreign_currency.update(accumulated_exchange_rate_mv=accumulated_exchange_rate_mv)
+
+        # accumulated_exchange_rate_fifo
+        transaction_amount_list = []
+        temp_val_in_foreign_currency = 0
+        temp_val_in_main_currency = 0
+        if max_qty_digit_for_fifo > 0:
+            qty_digit_unit = pow(10, max_qty_digit_for_fifo)
+        else:
+            qty_digit_unit = 1
+
+        for transaction_data in transaction_data_set:
+            if transaction_data['transaction_type'] == 'BUY':
+                for i in range(int(transaction_data['quantity']*qty_digit_unit)):
+                    transaction_amount_list.append(transaction_data['exchange_rate'])
+            elif transaction_data['transaction_type'] == 'SELL':
+                for i in range(int(transaction_data['quantity']*qty_digit_unit)):
+                    transaction_amount_list.pop(0)
+
+        for transaction_amount in transaction_amount_list:
+            temp_val_in_foreign_currency += 1
+            temp_val_in_main_currency += transaction_amount
+
+        if temp_val_in_foreign_currency > 0:
+            accumulated_exchange_rate_fifo = round(temp_val_in_main_currency/temp_val_in_foreign_currency, 2)
+        else:
+            accumulated_exchange_rate_fifo = 0
+        foreign_currency.update(accumulated_exchange_rate_fifo=accumulated_exchange_rate_fifo)
+
+        # exchange_rate_of_return_mv
+        new_exchange_rate_of_return_mv = 0
+        if accumulated_exchange_rate_mv > 0:
+            new_exchange_rate_of_return_mv = (current_exchange_rate-accumulated_exchange_rate_mv)/accumulated_exchange_rate_mv
+        foreign_currency.update(exchange_rate_of_return_mv=new_exchange_rate_of_return_mv)
+
+        # exchange_rate_of_return_fifo
+        new_exchange_rate_of_return_fifo = 0
+        if accumulated_exchange_rate_fifo > 0:
+            new_exchange_rate_of_return_fifo = (current_exchange_rate-accumulated_exchange_rate_fifo)/accumulated_exchange_rate_fifo
+        foreign_currency.update(exchange_rate_of_return_fifo=new_exchange_rate_of_return_fifo)
+
+        return {
+            'current_amount': final_amount,
+            'accumulated_exchange_rate_mv': accumulated_exchange_rate_mv,
+            'accumulated_exchange_rate_fifo': accumulated_exchange_rate_fifo,
+            'exchange_rate_of_return_mv': new_exchange_rate_of_return_mv,
+            'exchange_rate_of_return_fifo': new_exchange_rate_of_return_fifo,
+        }
 
 
 TRANSACTION_TYPE_CHOICES = (

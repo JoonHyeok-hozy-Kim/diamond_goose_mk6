@@ -172,7 +172,7 @@ class PensionAsset(models.Model):
             if transaction_data['transaction_type'] == 'BUY':
                 temp_qty += transaction_data['quantity']
                 temp_amt += transaction_data['quantity'] * transaction_data['price']
-            else:
+            elif transaction_data['transaction_type'] == 'SELL':
                 temp_price = temp_amt/temp_qty
                 temp_qty -= transaction_data['quantity']
                 temp_amt = temp_qty * temp_price

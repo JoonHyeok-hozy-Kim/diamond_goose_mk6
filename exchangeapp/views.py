@@ -92,8 +92,10 @@ class ForeignCurrencyDetailView(DetailView, FormMixin):
         queryset_transaction_list = ForeignCurrencyTransaction.objects.filter(foreign_currency=self.object.pk).order_by("-transaction_date")
         context.update({'queryset_transaction_list': queryset_transaction_list})
 
-        # Update Exchange Rate up-to-date.
+        # Update Foreign Currency Stats.
         self.object.update_current_rate()
+        self.object.refresh_from_db()
+        print(self.object.update_quantity_amount_rates())
         self.object.refresh_from_db()
 
         return context
@@ -108,7 +110,7 @@ class ForeignCurrencyTransactionCreateView(CreateView):
         temp_transaction = form.save(commit=False)
         temp_transaction.foreign_currency = ForeignCurrency.objects.get(pk=self.request.POST['foreign_currency_pk'])
 
-        if temp_transaction.transaction_type == 'SELL' and temp_transaction.quantity > temp_transaction.foreign_currency.quantity:
+        if temp_transaction.transaction_type == 'SELL' and temp_transaction.quantity > temp_transaction.foreign_currency.current_amount:
             return HttpResponseNotFound('Cannot SELL more than you hold.')
 
         temp_transaction.save()

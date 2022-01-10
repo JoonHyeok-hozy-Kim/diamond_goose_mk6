@@ -47,10 +47,10 @@
         <tr>
             <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.current_amount }}</td>
             <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.current_exchange_rate }}</td>
-            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.accumulated_exchange_rate_mv }}</td>
-            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.accumulated_exchange_rate_fifo }}</td>
-            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.exchange_rate_of_return_mv }}</td>
-            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.exchange_rate_of_return_fifo }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.accumulated_exchange_rate_mv|intcomma }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.accumulated_exchange_rate_fifo|intcomma }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.exchange_rate_of_return_mv|percentage_rate_format }}</td>
+            <td style="border: 1px solid white; text-align: end;">{{ foreigncurrency.exchange_rate_of_return_fifo|percentage_rate_format }}</td>
         </tr>
     </table>
 </div>
