@@ -21,7 +21,9 @@
                         <span class="material-icons">table_chart</span>
                     </a>
                 {% else %}
-                    {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}
+                    <div style="display: inline-block;">
+                        {% include 'portfolioapp/create.html' with dashboard=target_dashboard %}
+                    </div>
                 {% endif %}
 
                 {% if my_exchange_pk %}

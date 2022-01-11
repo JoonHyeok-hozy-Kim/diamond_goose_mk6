@@ -36,7 +36,7 @@ class Portfolio(models.Model):
         result = 0
         purchase_amount = asset_instance.quantity * asset_instance.average_purchase_price_mv
         if asset_instance.asset.currency == my_main_currency:
-            result += asset_instance.total_amount
+            result += purchase_amount
         else:
             for foreign_currency in foreign_currencies:
                 if asset_instance.asset.currency == foreign_currency.currency:
