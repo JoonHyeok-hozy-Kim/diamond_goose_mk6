@@ -53,7 +53,8 @@ class PortfolioDetailView(DetailView):
 
         for element in asset_type_count_list:
             if element['asset_type'] == 'EQUITY':
-                queryset_my_equities = Equity.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+                queryset_my_equities = Equity.objects.filter(owner=self.request.user,
+                                                             portfolio=self.object.pk)
                 context.update({'queryset_my_equities': queryset_my_equities})
                 context.update({'asset_count_equity': element['asset_count']+1})
 
@@ -68,7 +69,8 @@ class PortfolioDetailView(DetailView):
                 context.update({'asset_count_reits': element['asset_count'] + 1})
 
             elif element['asset_type'] == 'GUARDIAN':
-                queryset_my_guardians = Guardian.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+                queryset_my_guardians = Guardian.objects.filter(owner=self.request.user,
+                                                                portfolio=self.object.pk)
                 context.update({'queryset_my_guardians': queryset_my_guardians})
                 context.update({'asset_count_guardian': element['asset_count']+1})
 
