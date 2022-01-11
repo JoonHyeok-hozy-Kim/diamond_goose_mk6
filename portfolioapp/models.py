@@ -129,5 +129,10 @@ class Portfolio(models.Model):
             rate_of_return_foreign_exchange_adjusted = capital_gain_foreign_exchange_adjusted/purchase_value_exchange_adjusted
             portfolio.update(capital_gain_foreign_exchange_adjusted=capital_gain_foreign_exchange_adjusted)
             portfolio.update(rate_of_return_foreign_exchange_adjusted=rate_of_return_foreign_exchange_adjusted)
+        else:
+            portfolio.update(capital_gain=0)
+            portfolio.update(rate_of_return=0)
+            portfolio.update(capital_gain_foreign_exchange_adjusted=0)
+            portfolio.update(rate_of_return_foreign_exchange_adjusted=0)
 
         return asset_type_count_list
