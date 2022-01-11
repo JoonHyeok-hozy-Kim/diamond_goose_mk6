@@ -95,7 +95,7 @@ class ForeignCurrencyDetailView(DetailView, FormMixin):
         # Update Foreign Currency Stats.
         self.object.update_current_rate()
         self.object.refresh_from_db()
-        print(self.object.update_quantity_amount_rates())
+        self.object.update_quantity_amount_rates()
         self.object.refresh_from_db()
 
         return context

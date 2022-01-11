@@ -10,6 +10,7 @@ from dashboardapp.models import Dashboard
 EXCHANGE_LOOKUP = (
     ('KRW', 'Korean Won(￦)'),
     ('USD', 'US Dollar($)'),
+    ('JPY', 'Japanese Yen(¥)'),
 )
 
 class MyExchange(models.Model):
@@ -58,17 +59,26 @@ class ForeignCurrency(models.Model):
         response = requests.request("GET", url, headers=headers)
         dict_result = json.loads(response.text)
 
+        print('self.currency : ', self.currency)
         for result in dict_result:
-            if result['cur_unit'] == self.currency:
+            if result['cur_unit'][0:3] == self.currency:
                 exchange_rate_char_list = []
                 for char in result['deal_bas_r']:
                     if char != ',':
                         exchange_rate_char_list.append(char)
+
                 new_exchange_rate = round(float(''.join(exchange_rate_char_list)), 2)
+
+                if len(result['cur_unit']) > 3:
+                    power_list = []
+                    for char in result['cur_unit']:
+                        if char.isnumeric():
+                            power_list.append(char)
+                    power = int(''.join(power_list))
+                    new_exchange_rate /= power
 
                 foreign_currency = ForeignCurrency.objects.filter(pk=self.pk)
                 foreign_currency.update(current_exchange_rate=new_exchange_rate)
-                break
 
         return new_exchange_rate
 

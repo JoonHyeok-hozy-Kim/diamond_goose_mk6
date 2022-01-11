@@ -10,6 +10,7 @@ from django.views.generic import CreateView, DetailView, ListView
 from cryptoapp.models import Crypto
 from dashboardapp.models import Dashboard
 from equityapp.models import Equity
+from exchangeapp.models import ForeignCurrency
 from guardianapp.models import Guardian
 from pensionapp.models import PensionAsset, Pension
 from portfolioapp.decorators import portfolio_ownership_required
@@ -47,51 +48,35 @@ class PortfolioDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PortfolioDetailView, self).get_context_data(**kwargs)
 
-        queryset_my_equities = Equity.objects.filter(owner=self.request.user, portfolio=self.object.pk)
-        asset_count_equity = 1
-        for equity in queryset_my_equities:
-            equity.asset.update_current_price()
-            # equity.update_equity_data()
-            asset_count_equity += 1
-        context.update({'queryset_my_equities': queryset_my_equities})
-        context.update({'asset_count_equity': asset_count_equity})
+        asset_type_count_list = self.object.update_current_value()
+        self.object.refresh_from_db()
 
-        queryset_my_guardians = Guardian.objects.filter(owner=self.request.user, portfolio=self.object.pk)
-        asset_count_guardian = 1
-        for guardian in queryset_my_guardians:
-            guardian.asset.update_current_price()
-            # guardian.update_guardian_data()
-            asset_count_guardian += 1
-        context.update({'queryset_my_guardians': queryset_my_guardians})
-        context.update({'asset_count_guardian': asset_count_guardian})
+        for element in asset_type_count_list:
+            if element['asset_type'] == 'EQUITY':
+                queryset_my_equities = Equity.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+                context.update({'queryset_my_equities': queryset_my_equities})
+                context.update({'asset_count_equity': element['asset_count']+1})
 
-        queryset_my_pension_assets = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
-        asset_count_pension_asset = 1
-        for pension_asset in queryset_my_pension_assets:
-            pension_asset.asset.update_current_price()
-            # pension_asset.update_pension_asset_data()
-            asset_count_pension_asset += 1
-        context.update({'queryset_my_pension_assets': queryset_my_pension_assets})
-        context.update({'asset_count_pension_asset': asset_count_pension_asset})
+            elif element['asset_type'] == 'CRYPTO':
+                queryset_my_cryptoes = Crypto.objects.filter(owner=self.request.user)
+                context.update({'queryset_my_cryptoes': queryset_my_cryptoes})
+                context.update({'asset_count_cryptoes': element['asset_count'] + 1})
 
-        queryset_my_cryptoes = Crypto.objects.filter(owner=self.request.user)
-        asset_count_cryptoes = 1
-        for crypto in queryset_my_cryptoes:
-            crypto.asset.update_current_price()
-            # crypto.update_crypto_data()
-            asset_count_cryptoes += 1
-        context.update({'queryset_my_cryptoes': queryset_my_cryptoes})
-        context.update({'asset_count_cryptoes': asset_count_cryptoes})
+            elif element['asset_type'] == 'REITS':
+                queryset_my_reits = Reits.objects.filter(owner=self.request.user)
+                context.update({'queryset_my_reits': queryset_my_reits})
+                context.update({'asset_count_reits': element['asset_count'] + 1})
 
-        queryset_my_reits = Reits.objects.filter(owner=self.request.user)
-        asset_count_reits = 1
-        for reits in queryset_my_reits:
-            reits.asset.update_current_price()
-            # reits.update_reits_data()
-            asset_count_reits += 1
-        context.update({'queryset_my_reits': queryset_my_reits})
-        context.update({'asset_count_reits': asset_count_reits})
+            elif element['asset_type'] == 'GUARDIAN':
+                queryset_my_guardians = Guardian.objects.filter(owner=self.request.user, portfolio=self.object.pk)
+                context.update({'queryset_my_guardians': queryset_my_guardians})
+                context.update({'asset_count_guardian': element['asset_count']+1})
 
+            elif element['asset_type'] == 'PENSION':
+                queryset_my_pension_assets = PensionAsset.objects.filter(owner=self.request.user).order_by('pension')
+                context.update({'queryset_my_pension_assets': queryset_my_pension_assets})
+                context.update({'asset_count_pension_asset': element['asset_count'] + 1})
+                
         return context
 
 
