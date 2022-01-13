@@ -34,6 +34,7 @@ urlpatterns = [
     path('cryptoes/', include('cryptoapp.urls')),
     path('reits/', include('reitsapp.urls')),
     path('exchange/', include('exchangeapp.urls')),
+    path('hozylab/', include('hozylabapp.urls')),
     # path('articles/', include('articleapp.urls')),
     # path('comments/', include('commentapp.urls')),
     # path('equitytransactions/', include('equitytransactionapp.urls')),

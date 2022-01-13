@@ -31,7 +31,11 @@ class AssetListView(ListView):
         query_asset_list = Asset.objects.all().order_by('asset_type','ticker').values()
         for query_asset in query_asset_list:
             query_asset['name'] = Truncator(query_asset['name']).chars(29)
-            query_asset['image'] = 'media/'+query_asset['image']
+            if query_asset['image']:
+                query_asset['image'] = 'media/'+query_asset['image']
+            else:
+                query_asset['image'] = 'media/assetmaster/diamond_goose_logo_mk1.png'
+            print(query_asset['image'])
         context.update({'query_asset_list': query_asset_list})
         return context
 
@@ -56,6 +60,8 @@ class AssetDetailView(DetailView):
         self.object.refresh_from_db()
 
         context = super(AssetDetailView, self).get_context_data(**kwargs)
+
+        context.update({'default_image_url': 'static/images/diamond_goose_logo_mk1.png'})
 
         if self.request.user.is_authenticated:
             my_portfolio_scalar_query = Portfolio.objects.filter(owner=self.request.user).values()

@@ -27,12 +27,12 @@ CURRENCY_CHOICES = (
 )
 
 class Asset(models.Model):
-    asset_type = models.CharField(max_length=100, choices=ASSET_TYPES, null=False)
-    market = models.CharField(max_length=100, choices=MARKET_CHOICES, null=False)
+    asset_type = models.CharField(max_length=100, choices=ASSET_TYPES, null=True)
+    market = models.CharField(max_length=100, choices=MARKET_CHOICES, null=True)
     ticker = models.CharField(max_length=20, null=False)
     name = models.CharField(max_length=200, null=True)
     currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, null=False)
-    image = models.ImageField(upload_to='assetmaster/', null=True)
+    image = models.ImageField(upload_to='assetmaster/', default='static/images/diamond_goose_logo_mk1.png', null=False)
 
     current_price = models.FloatField(default=0, null=False)
 

@@ -15,9 +15,6 @@ from accountapp.models import Profile
 has_account_ownership = [login_required, account_ownership_required]
 has_profile_ownership = [login_required, profile_ownership_required]
 
-def temp_welcome_view(request):
-    return render(request, 'accountapp/temp_welcome.html')
-
 
 class AccountCreateView(CreateView):
     model = User
