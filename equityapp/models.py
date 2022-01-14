@@ -70,7 +70,6 @@ class Equity(models.Model):
                 temp_price = temp_amt/temp_qty
                 temp_qty -= transaction_data['quantity']
                 temp_amt = temp_qty * temp_price
-
         if temp_qty < 0: average_purchase_price_mv = -999
         elif temp_qty > 0: average_purchase_price_mv = temp_amt/temp_qty
         equity.update(average_purchase_price_mv=average_purchase_price_mv)

@@ -21,6 +21,56 @@ class Portfolio(models.Model):
     creation_date = models.DateTimeField(auto_now=True)
     last_update_date = models.DateTimeField(auto_now_add=True)
 
+    def count_by_asset(self):
+        asset_type_count_list = []
+
+        from equityapp.models import Equity
+        queryset_equities = Equity.objects.filter(portfolio=self.pk)
+        asset_type = None
+        asset_count = 0
+        for equity in queryset_equities:
+            asset_type = equity.asset.asset_type
+            asset_count += 1
+        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
+
+        from cryptoapp.models import Crypto
+        queryset_cryptoes = Crypto.objects.filter(portfolio=self.pk)
+        asset_type = None
+        asset_count = 0
+        for crypto in queryset_cryptoes:
+            asset_type = crypto.asset.asset_type
+            asset_count += 1
+        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
+
+        from reitsapp.models import Reits
+        queryset_reits = Reits.objects.filter(portfolio=self.pk)
+        asset_type = None
+        asset_count = 0
+        for reits in queryset_reits:
+            asset_type = reits.asset.asset_type
+            asset_count += 1
+        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
+
+        from guardianapp.models import Guardian
+        queryset_guardians = Guardian.objects.filter(portfolio=self.pk)
+        asset_type = None
+        asset_count = 0
+        for guardian in queryset_guardians:
+            asset_type = guardian.asset.asset_type
+            asset_count += 1
+        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
+
+        from pensionapp.models import PensionAsset
+        queryset_pension_assets = PensionAsset.objects.filter(owner=self.owner.pk)
+        asset_type = None
+        asset_count = 0
+        for pension_asset in queryset_pension_assets:
+            asset_type = pension_asset.asset.asset_type
+            asset_count += 1
+        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
+
+        return asset_type_count_list
+
     def asset_current_value_exchanger(self, asset_instance, my_main_currency, foreign_currencies):
         asset_instance.asset.update_current_price()
         result = 0
@@ -50,7 +100,6 @@ class Portfolio(models.Model):
         current_value = 0
         purchase_value = 0
         purchase_value_exchange_adjusted = 0
-        asset_type_count_list = []
 
         queryset_my_exchange = MyExchange.objects.get(dashboard=self.dashboard.pk)
         my_main_currency = queryset_my_exchange.main_currency
@@ -58,63 +107,44 @@ class Portfolio(models.Model):
 
         from equityapp.models import Equity
         queryset_equities = Equity.objects.filter(portfolio=self.pk)
-        asset_type = None
-        asset_count = 0
         for equity in queryset_equities:
+            equity.update_equity_data()
             current_value += self.asset_current_value_exchanger(equity, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(equity, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(equity, my_main_currency, queryset_foreign_currencies, 'Y')
-            asset_type = equity.asset.asset_type
-            asset_count += 1
-        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
 
         from cryptoapp.models import Crypto
         queryset_cryptoes = Crypto.objects.filter(portfolio=self.pk)
-        asset_type = None
-        asset_count = 0
         for crypto in queryset_cryptoes:
+            crypto.update_crypto_data()
             current_value += self.asset_current_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies, 'Y')
-            asset_type = crypto.asset.asset_type
-            asset_count += 1
-        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
 
         from reitsapp.models import Reits
         queryset_reits = Reits.objects.filter(portfolio=self.pk)
-        asset_type = None
-        asset_count = 0
         for reits in queryset_reits:
+            reits.update_reits_data()
             current_value += self.asset_current_value_exchanger(reits, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(reits, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(reits, my_main_currency, queryset_foreign_currencies, 'Y')
-            asset_type = reits.asset.asset_type
-            asset_count += 1
-        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
 
         from guardianapp.models import Guardian
         queryset_guardians = Guardian.objects.filter(portfolio=self.pk)
-        asset_type = None
-        asset_count = 0
         for guardian in queryset_guardians:
+            guardian.update_guardian_data()
             current_value += self.asset_current_value_exchanger(guardian, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(guardian, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(guardian, my_main_currency, queryset_foreign_currencies, 'Y')
             asset_type = guardian.asset.asset_type
-            asset_count += 1
-        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
 
         from pensionapp.models import PensionAsset
         queryset_pension_assets = PensionAsset.objects.filter(owner=self.owner.pk)
-        asset_type = None
-        asset_count = 0
         for pension_asset in queryset_pension_assets:
+            pension_asset.update_pension_asset_data()
             current_value += self.asset_current_value_exchanger(pension_asset, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(pension_asset, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(pension_asset, my_main_currency, queryset_foreign_currencies, 'Y')
-            asset_type = pension_asset.asset.asset_type
-            asset_count += 1
-        asset_type_count_list.append({'asset_type': asset_type, 'asset_count': asset_count})
 
         portfolio = Portfolio.objects.filter(pk=self.pk)
         portfolio.update(current_value=current_value)
@@ -135,4 +165,4 @@ class Portfolio(models.Model):
             portfolio.update(capital_gain_foreign_exchange_adjusted=0)
             portfolio.update(rate_of_return_foreign_exchange_adjusted=0)
 
-        return asset_type_count_list
+        return

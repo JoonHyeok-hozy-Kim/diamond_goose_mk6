@@ -50,8 +50,8 @@ class EquityDetailView(DetailView, FormMixin):
         self.object.asset.refresh_from_db()
 
         # Update Equity's stats
-        self.object.update_equity_data()
-        self.object.refresh_from_db()
+        # self.object.update_equity_data()
+        # self.object.refresh_from_db()
 
         context = super(EquityDetailView, self).get_context_data(**kwargs)
 

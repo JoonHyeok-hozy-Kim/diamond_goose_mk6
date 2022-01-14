@@ -17,7 +17,7 @@
                 <a href="{% url 'dashboardapp:detail' pk=target_portfolio.dashboard.pk %}" class="btn btn-info btn-sm">
                     <span class="material-icons">show_chart</span>
                 </a>
-                <a href="" class="btn btn-light btn-sm">
+                <a href="{% url 'portfolioapp:portfolio_refresh' %}" class="btn btn-light btn-sm">
                     <span class="material-icons">refresh</span>
                 </a>
             </div>

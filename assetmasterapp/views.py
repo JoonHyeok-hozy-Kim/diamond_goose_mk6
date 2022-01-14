@@ -18,6 +18,7 @@ from cryptoapp.models import Crypto
 from equityapp.models import Equity
 from guardianapp.models import Guardian
 from portfolioapp.models import Portfolio
+from reitsapp.models import Reits
 
 
 class AssetListView(ListView):
@@ -35,7 +36,6 @@ class AssetListView(ListView):
                 query_asset['image'] = 'media/'+query_asset['image']
             else:
                 query_asset['image'] = 'media/assetmaster/diamond_goose_logo_mk1.png'
-            print(query_asset['image'])
         context.update({'query_asset_list': query_asset_list})
         return context
 
@@ -90,9 +90,16 @@ class AssetDetailView(DetailView):
                             my_asset_pk = my_guardian.asset.pk
 
                 elif self.object.asset_type == 'REITS':
-                    None
+                    queryset_my_reits = Reits.objects.filter(asset=self.object.pk,
+                                                             portfolio=my_portfolio_pk,
+                                                             owner=self.request.user)
+                    if queryset_my_reits:
+                        for my_guardian in queryset_my_reits:
+                            my_asset_pk = my_guardian.asset.pk
+
                 elif self.object.asset_type == 'PENSION':
                     None
+
                 elif self.object.asset_type == 'CRYPTO':
                     queryset_my_crypto = Crypto.objects.filter(asset=self.object.pk,
                                                                portfolio=my_portfolio_pk,

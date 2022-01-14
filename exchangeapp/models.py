@@ -59,7 +59,6 @@ class ForeignCurrency(models.Model):
         response = requests.request("GET", url, headers=headers)
         dict_result = json.loads(response.text)
 
-        print('self.currency : ', self.currency)
         for result in dict_result:
             if result['cur_unit'][0:3] == self.currency:
                 exchange_rate_char_list = []
