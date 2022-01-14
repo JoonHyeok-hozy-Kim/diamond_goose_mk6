@@ -113,7 +113,7 @@ def asset_type_determinate(ticker):
 def upload_mass_transaction(request):
     try:
         if request.method == 'POST' and request.FILES['transaction_file']:
-            db_frame = read_excel(request)
+            db_frame = pd.read_excel(request.FILES['transaction_file'], sheet_name=0)
     except Exception as identifier:
         print('upload_mass_transaction: excel_import', identifier)
 
