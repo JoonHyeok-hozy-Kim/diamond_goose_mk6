@@ -74,7 +74,9 @@
                                             <th class="equitytransaction_table_th">수량</th>
                                             <th class="equitytransaction_table_th">환율</th>
                                             <th class="equitytransaction_table_th">비고</th>
-                                            <th class="equitytransaction_table_th_delete"><span class="material-icons">delete</span></th>
+                                            <th class="equitytransaction_table_th_delete">
+                                                {% include 'exchangeapp/foreigncurrencytransaction_delete_all.html' with foreign_currency=target_foreign_currency %}
+                                            </th>
                                         </tr>
 
                                         {% include 'exchangeapp/foriegncurrencytransaction_list.html' with transaction_list=queryset_transaction_list %}

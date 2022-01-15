@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -127,3 +127,22 @@ class ForeignCurrencyTransactionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('exchangeapp:foreigncurrency_detail', kwargs={'pk': self.object.foreign_currency.pk})
+
+
+def foreign_currency_transaction_delete_all(request):
+
+    foreign_currency_pk = request.GET['foreign_currency_pk']
+    queryset_foreign_currency_transactions = ForeignCurrencyTransaction.objects.filter(foreign_currency=foreign_currency_pk)
+    delete_count = 0
+    currency = None
+    for transaction in queryset_foreign_currency_transactions:
+        delete_count += 1
+        currency = transaction.foreign_currency.currency
+        transaction.delete()
+    print('Delete transaction of {}. {} row(s) deleted.'.format(currency, delete_count))
+
+    target_foreign_currency = ForeignCurrency.objects.get(pk=foreign_currency_pk)
+    target_foreign_currency.update_quantity_amount_rates()
+    target_foreign_currency.refresh_from_db()
+
+    return HttpResponseRedirect(reverse('exchangeapp:foreigncurrency_detail', kwargs={'pk': foreign_currency_pk}))
