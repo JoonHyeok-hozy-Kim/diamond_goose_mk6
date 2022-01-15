@@ -45,3 +45,5 @@ DATABASES = {
 
 # Open API Keys
 EXIM_BANK_API_KEY = read_secret('EXIM_BANK_API_KEY')
+UPBIT_ACCESS_KEY = read_secret('UPBIT_ACCESS_KEY')
+UPBIT_SECRET_KEY = read_secret('UPBIT_SECRET_KEY')

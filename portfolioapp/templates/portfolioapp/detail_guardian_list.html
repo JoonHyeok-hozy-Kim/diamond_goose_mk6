@@ -13,7 +13,7 @@
             <a href="{% url 'guardianapp:guardian_detail' pk=guardian.pk %}" style="text-decoration: none; color: #000000;">
                 {{ guardian.asset.ticker }}</a></td>
         <td style="text-align: start; border: 1px solid black;">
-            <a href="{% url 'guardianapp:guardian_detail' pk=guardian.pk %}" style="text-decoration: none; color: #000000;">
+            <a href="{% url 'guardianapp:guardian_detail' pk=guardian.pk %}" style="text-indent: 0.5rem; text-decoration: none; color: #000000;">
                 {{ guardian.asset.name|asset_name_omit }}</a></td>
         <td style="text-align: center; border: 1px solid black;">{{ guardian.asset.currency }}</td>
         <td style="text-align: center; border: 1px solid black;">{{ guardian.quantity|int_number }}</td>

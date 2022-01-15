@@ -48,9 +48,10 @@ class CryptoDetailView(DetailView, FormMixin):
         self.object.asset.update_current_price()
         self.object.asset.refresh_from_db()
 
-        # Update Equity's stats
-        self.object.update_crypto_data()
+        # Update Crypto's stats
+        self.object.update_from_upbit()
         self.object.refresh_from_db()
+
 
         context = super(CryptoDetailView, self).get_context_data(**kwargs)
 
