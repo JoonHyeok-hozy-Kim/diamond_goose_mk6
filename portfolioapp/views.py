@@ -86,6 +86,7 @@ def portfolio_refresh(request):
     try:
         queryset_my_portfolio = Portfolio.objects.get(owner=request.user)
         queryset_my_portfolio.update_current_value()
+        queryset_my_portfolio.refresh_from_db()
 
     except Exception as identifier:
         print('portfolio_refresh:', identifier)

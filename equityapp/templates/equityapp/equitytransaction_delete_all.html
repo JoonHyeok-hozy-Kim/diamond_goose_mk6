@@ -1,0 +1,11 @@
+{% load bootstrap4 %}
+
+<div>
+    <form action="{% url 'equityapp:equity_transaction_delete_all' %}" method="get">
+        {% csrf_token %}
+        <input type="hidden" name="equity_pk" value="{{ equity.pk }}">
+        <button type="submit" style="border: none; background-color: #FA0067; color: #FFFFFF;">
+            <span class="material-icons">delete</span>
+        </button>
+    </form>
+</div>

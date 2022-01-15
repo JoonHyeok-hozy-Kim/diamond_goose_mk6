@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -48,7 +48,7 @@ class GuardianDetailView(DetailView, FormMixin):
         self.object.asset.update_current_price()
         self.object.asset.refresh_from_db()
 
-        # Update Equity's stats
+        # Update guardian's stats
         self.object.update_guardian_data()
         self.object.refresh_from_db()
 
@@ -98,3 +98,22 @@ class GuardianTransactionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('guardianapp:guardian_detail', kwargs={'pk': self.object.guardian.pk})
+
+
+def guardian_transaction_delete_all(request):
+
+    guardian_pk = request.GET['guardian_pk']
+    queryset_guardian_transactions = GuardianTransaction.objects.filter(guardian=guardian_pk)
+    delete_count = 0
+    asset_name = None
+    for transaction in queryset_guardian_transactions:
+        delete_count += 1
+        asset_name = transaction.guardian.asset.name
+        transaction.delete()
+    print('Delete transaction of {}. {} row(s) deleted.'.format(asset_name, delete_count))
+
+    target_guardian = Guardian.objects.get(pk=guardian_pk)
+    target_guardian.update_guardian_data()
+    target_guardian.refresh_from_db()
+
+    return HttpResponseRedirect(reverse('guardianapp:guardian_detail', kwargs={'pk': guardian_pk}))

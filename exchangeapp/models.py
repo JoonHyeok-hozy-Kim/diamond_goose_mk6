@@ -59,6 +59,8 @@ class ForeignCurrency(models.Model):
         response = requests.request("GET", url, headers=headers)
         dict_result = json.loads(response.text)
 
+        exchange_rate = self.current_exchange_rate
+
         for result in dict_result:
             if result['cur_unit'][0:3] == self.currency:
                 exchange_rate_char_list = []
@@ -66,7 +68,7 @@ class ForeignCurrency(models.Model):
                     if char != ',':
                         exchange_rate_char_list.append(char)
 
-                new_exchange_rate = round(float(''.join(exchange_rate_char_list)), 2)
+                exchange_rate = round(float(''.join(exchange_rate_char_list)), 2)
 
                 if len(result['cur_unit']) > 3:
                     power_list = []
@@ -74,12 +76,12 @@ class ForeignCurrency(models.Model):
                         if char.isnumeric():
                             power_list.append(char)
                     power = int(''.join(power_list))
-                    new_exchange_rate /= power
+                    exchange_rate /= power
 
                 foreign_currency = ForeignCurrency.objects.filter(pk=self.pk)
-                foreign_currency.update(current_exchange_rate=new_exchange_rate)
+                foreign_currency.update(current_exchange_rate=exchange_rate)
 
-        return new_exchange_rate
+        return exchange_rate
 
     def update_quantity_amount_rates(self):
         from django.db.models import Q

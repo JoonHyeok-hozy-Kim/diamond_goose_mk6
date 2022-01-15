@@ -66,9 +66,7 @@
                                         <th class="equitytransaction_table_th">제세금</th>
                                         <th class="equitytransaction_table_th">비고</th>
                                         <th class="equitytransaction_table_th_delete">
-                                            <a href="" style="color: #FFFFFF;">
-                                                <span class="material-icons">delete</span>
-                                            </a>
+                                            {% include 'equityapp/equitytransaction_delete_all.html' with equity=target_equity %}
                                         </th>
                                     </tr>
 

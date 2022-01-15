@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -48,7 +48,7 @@ class ReitsDetailView(DetailView, FormMixin):
         self.object.asset.update_current_price()
         self.object.asset.refresh_from_db()
 
-        # Update Equity's stats
+        # Update reits's stats
         self.object.update_reits_data()
         self.object.refresh_from_db()
 
@@ -99,3 +99,22 @@ class ReitsTransactionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('reitsapp:reits_detail', kwargs={'pk': self.object.reits.pk})
+
+
+def reits_transaction_delete_all(request):
+
+    reits_pk = request.GET['reits_pk']
+    queryset_reits_transactions = ReitsTransaction.objects.filter(reits=reits_pk)
+    delete_count = 0
+    asset_name = None
+    for transaction in queryset_reits_transactions:
+        delete_count += 1
+        asset_name = transaction.reits.asset.name
+        transaction.delete()
+    print('Delete transaction of {}. {} row(s) deleted.'.format(asset_name, delete_count))
+
+    target_reits = Reits.objects.get(pk=reits_pk)
+    target_reits.update_reits_data()
+    target_reits.refresh_from_db()
+
+    return HttpResponseRedirect(reverse('reitsapp:reits_detail', kwargs={'pk': reits_pk}))

@@ -67,7 +67,9 @@
                                         <th class="equitytransaction_table_th">제비용</th>
                                         <th class="equitytransaction_table_th">제세금</th>
                                         <th class="equitytransaction_table_th">비고</th>
-                                        <th class="equitytransaction_table_th_delete"><span class="material-icons">delete</span></th>
+                                        <th class="equitytransaction_table_th_delete">
+                                            {% include 'reitsapp/reitstransaction_delete_all.html' with reits=target_reits %}
+                                        </th>
                                     </tr>
 
                                     {% include 'reitsapp/reitstransaction_list.html' with transaction_list=my_reits_transactions target_currency=target_reits.asset.currency %}

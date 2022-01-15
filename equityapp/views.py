@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -105,6 +105,25 @@ class EquityTransactionDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('equityapp:equity_detail', kwargs={'pk': self.object.equity.pk})
+
+
+def equity_transaction_delete_all(request):
+
+    equity_pk = request.GET['equity_pk']
+    queryset_equity_transactions = EquityTransaction.objects.filter(equity=equity_pk)
+    delete_count = 0
+    asset_name = None
+    for transaction in queryset_equity_transactions:
+        delete_count += 1
+        asset_name = transaction.equity.asset.name
+        transaction.delete()
+    print('Delete transaction of {}. {} row(s) deleted.'.format(asset_name, delete_count))
+
+    target_equity = Equity.objects.get(pk=equity_pk)
+    target_equity.update_equity_data()
+    target_equity.refresh_from_db()
+
+    return HttpResponseRedirect(reverse('equityapp:equity_detail', kwargs={'pk': equity_pk}))
 
 
 def equitytransaction_export_csv_template(request):
