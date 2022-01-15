@@ -142,21 +142,23 @@ class PensionAsset(models.Model):
         query = Q(transaction_type='BUY')
         query.add(Q(transaction_type='SELL'),Q.OR)
         query.add(Q(transaction_type='DIVIDEND'),Q.OR)
-        query.add(Q(quantity__gt=0),Q.AND)
+        query.add(Q(transaction_type='SPLIT'),Q.OR)
 
-        transaction_data_set = self.transaction.filter(query).values()
+        transaction_data_set = self.transaction.filter(query)
         pension_asset = PensionAsset.objects.filter(pk=self.pk)
 
         # quantity and amount
         final_quantity = 0
         total_dividend_amount = 0
         for transaction_data in transaction_data_set:
-            if transaction_data['transaction_type'] == 'BUY':
-                final_quantity += transaction_data['quantity']
-            elif transaction_data['transaction_type'] == 'SELL':
-                final_quantity -= transaction_data['quantity']
-            elif transaction_data['transaction_type'] == 'DIVIDEND':
-                total_dividend_amount += transaction_data['price'] * transaction_data['quantity']
+            if transaction_data.transaction_type == 'BUY':
+                final_quantity += transaction_data.quantity
+            elif transaction_data.transaction_type == 'SELL':
+                final_quantity -= transaction_data.quantity
+            elif transaction_data.transaction_type == 'DIVIDEND':
+                total_dividend_amount += transaction_data.price * transaction_data.quantity
+            elif transaction_data.transaction_type == 'SPLIT':
+                final_quantity *= transaction_data.split_ratio_one_to_N
 
         current_price = self.asset.current_price
         total_amount = final_quantity*current_price
@@ -169,13 +171,15 @@ class PensionAsset(models.Model):
         temp_amt = 0
         average_purchase_price_mv = 0
         for transaction_data in transaction_data_set:
-            if transaction_data['transaction_type'] == 'BUY':
-                temp_qty += transaction_data['quantity']
-                temp_amt += transaction_data['quantity'] * transaction_data['price']
-            elif transaction_data['transaction_type'] == 'SELL':
+            if transaction_data.transaction_type == 'BUY':
+                temp_qty += transaction_data.quantity
+                temp_amt += transaction_data.quantity * transaction_data.price
+            elif transaction_data.transaction_type == 'SELL':
                 temp_price = temp_amt/temp_qty
-                temp_qty -= transaction_data['quantity']
+                temp_qty -= transaction_data.quantity
                 temp_amt = temp_qty * temp_price
+            elif transaction_data.transaction_type == 'SPLIT':
+                temp_qty *= transaction_data.split_ratio_one_to_N
 
         if temp_qty < 0: average_purchase_price_mv = -999
         elif temp_qty > 0: average_purchase_price_mv = temp_amt/temp_qty
@@ -186,12 +190,19 @@ class PensionAsset(models.Model):
         temp_qty = 0
         temp_amt = 0
         for transaction_data in transaction_data_set:
-            if transaction_data['transaction_type'] == 'BUY':
-                for i in range(int(transaction_data['quantity'])):
-                    transaction_amount_list.append(transaction_data['price'])
-            elif transaction_data['transaction_type'] == 'SELL':
-                for i in range(int(transaction_data['quantity'])):
+            if transaction_data.transaction_type == 'BUY':
+                for i in range(int(transaction_data.quantity)):
+                    transaction_amount_list.append(transaction_data.price)
+            elif transaction_data.transaction_type == 'SELL':
+                for i in range(int(transaction_data.quantity)):
                     transaction_amount_list.pop(0)
+            elif transaction_data.transaction_type == 'SPLIT':
+                if transaction_data.split_ratio_one_to_N > 1:
+                    new_transaction_amount_list = []
+                    for i in transaction_amount_list:
+                        for j in range(transaction_data.split_ratio_one_to_N):
+                            new_transaction_amount_list.append(i/transaction_data.split_ratio_one_to_N)
+                    transaction_amount_list = new_transaction_amount_list
 
         for transaction_amount in transaction_amount_list:
             temp_qty += 1
@@ -259,7 +270,7 @@ class PensionAssetTransaction(models.Model):
     transaction_date = models.DateTimeField(default=utils.timezone.now, null=False)
     note = models.CharField(max_length=40, default=' - ', null=True)
 
-    split_cnt = models.IntegerField(default=0, null=False)
+    split_ratio_one_to_N = models.IntegerField(default=0, null=True)
 
     creation_date = models.DateTimeField(auto_now=True)
     last_update_date = models.DateTimeField(auto_now_add=True)

@@ -175,6 +175,7 @@ def upload_mass_transaction(request):
                                 transaction_tax=upload_format['transaction_tax'],
                                 transaction_date=transaction_date_timezone,
                                 note='Excel Mass Upload '+upload_format['data_source'],
+                                split_ratio_one_to_N=upload_format['split_ratio_one_to_N'],
                             )
 
                         elif upload_format['asset_type'] == 'CRYPTO':
@@ -229,6 +230,7 @@ def upload_mass_transaction(request):
                                 transaction_tax=upload_format['transaction_tax'],
                                 transaction_date=transaction_date_timezone,
                                 note='Excel Mass Upload '+upload_format['data_source'],
+                                split_ratio_one_to_N=upload_format['split_ratio_one_to_N'],
                             )
 
                         elif upload_format['asset_type'] == 'REITS':
@@ -256,6 +258,7 @@ def upload_mass_transaction(request):
                                 transaction_tax=upload_format['transaction_tax'],
                                 transaction_date=transaction_date_timezone,
                                 note='Excel Mass Upload '+upload_format['data_source'],
+                                split_ratio_one_to_N=upload_format['split_ratio_one_to_N'],
                             )
 
                         elif upload_format['asset_type'] == 'PENSION':
@@ -289,6 +292,7 @@ def upload_mass_transaction(request):
                                 transaction_tax=upload_format['transaction_tax'],
                                 transaction_date=transaction_date_timezone,
                                 note='Excel Mass Upload '+upload_format['data_source'],
+                                split_ratio_one_to_N=upload_format['split_ratio_one_to_N'],
                             )
 
                     except Exception as identifier:
