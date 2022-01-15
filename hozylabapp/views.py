@@ -18,10 +18,10 @@ from cryptoapp.models import Crypto, CryptoTransaction
 from diamond_goose_mk6 import settings
 from diamond_goose_mk6.settings import base
 from equityapp.models import Equity, EquityTransaction
-from exchangeapp.models import ForeignCurrency, ForeignCurrencyTransaction
+from exchangeapp.models import ForeignCurrency, ForeignCurrencyTransaction, MyExchange
 from guardianapp.models import Guardian, GuardianTransaction
 from hozylabapp.models import TempTransaction
-from pensionapp.models import PensionAsset, PensionAssetTransaction
+from pensionapp.models import PensionAsset, PensionAssetTransaction, Pension
 from reitsapp.models import Reits, ReitsTransaction
 
 
@@ -113,7 +113,7 @@ def asset_type_determinate(ticker):
 def upload_mass_transaction(request):
     try:
         if request.method == 'POST' and request.FILES['transaction_file']:
-            db_frame = pd.read_excel(request.FILES['transaction_file'], sheet_name=0)
+            db_frame = pd.read_excel(request.FILES['transaction_file'], sheet_name=0).fillna('')
     except Exception as identifier:
         print('upload_mass_transaction: excel_import', identifier)
 
@@ -125,7 +125,7 @@ def upload_mass_transaction(request):
             upload_format['data_source'] = row[1]
             upload_format['asset_type'] = row[2]
             upload_format['transaction_type'] = row[3]
-            upload_format['ticker'] = str(row[4]).split("'")[-1] if "'" in row[4] else row[4]
+            upload_format['ticker'] = str(row[4]).split("'")[-1] if type(row[4]) == str and "'" in row[4] else row[4]
             upload_format['pension_type'] = row[5]
             upload_format['currency'] = row[6]
             upload_format['quantity'] = 0 if row[7] == '' else row[7]
@@ -147,10 +147,25 @@ def upload_mass_transaction(request):
                     except Exception as identifier:
                         print('Exception in calling target Asset model by ticker.', identifier, upload_format)
                         break
+
                     try:
                         if upload_format['asset_type'] == 'EQUITY':
-                            target_my_asset = Equity.objects.get(owner=request.user,
-                                                                 asset=target_asset.pk)
+
+                            try:
+                                target_my_asset = Equity.objects.get(owner=request.user,
+                                                                     asset=target_asset.pk)
+                            except Exception as asset_find:
+                                print('Exception in calling target Equity, {} :'.format(target_asset.ticker), asset_find)
+                                from portfolioapp.models import Portfolio
+                                my_portfolio = Portfolio.objects.get(owner=request.user)
+                                asset_obj = Equity.objects.create(
+                                    asset=target_asset,
+                                    portfolio=my_portfolio,
+                                    owner=request.user,
+                                )
+                                asset_obj.save()
+                                target_my_asset = Equity.objects.get(pk=asset_obj.pk)
+
                             obj = EquityTransaction.objects.create(
                                 equity=target_my_asset,
                                 transaction_type=upload_format['transaction_type'],
@@ -163,8 +178,21 @@ def upload_mass_transaction(request):
                             )
 
                         elif upload_format['asset_type'] == 'CRYPTO':
-                            target_my_asset = Crypto.objects.get(owner=request.user,
-                                                                 asset=target_asset.pk)
+                            try:
+                                target_my_asset = Crypto.objects.get(owner=request.user,
+                                                                     asset=target_asset.pk)
+                            except Exception as asset_find:
+                                print('Exception in calling target Crypto, {} :'.format(target_asset.ticker), asset_find)
+                                from portfolioapp.models import Portfolio
+                                my_portfolio = Portfolio.objects.get(owner=request.user)
+                                asset_obj = Crypto.objects.create(
+                                    asset=target_asset,
+                                    portfolio=my_portfolio,
+                                    owner=request.user,
+                                )
+                                asset_obj.save()
+                                target_my_asset = Crypto.objects.get(pk=asset_obj.pk)
+
                             obj = CryptoTransaction.objects.create(
                                 crypto=target_my_asset,
                                 transaction_type=upload_format['transaction_type'],
@@ -177,8 +205,21 @@ def upload_mass_transaction(request):
                             )
 
                         elif upload_format['asset_type'] == 'GUARDIAN':
-                            target_my_asset = Guardian.objects.get(owner=request.user,
-                                                                   asset=target_asset.pk)
+                            try:
+                                target_my_asset = Guardian.objects.get(owner=request.user,
+                                                                       asset=target_asset.pk)
+                            except Exception as asset_find:
+                                print('Exception in calling target Guardian, {} :'.format(target_asset.ticker), asset_find)
+                                from portfolioapp.models import Portfolio
+                                my_portfolio = Portfolio.objects.get(owner=request.user)
+                                asset_obj = Guardian.objects.create(
+                                    asset=target_asset,
+                                    portfolio=my_portfolio,
+                                    owner=request.user,
+                                )
+                                asset_obj.save()
+                                target_my_asset = Guardian.objects.get(pk=asset_obj.pk)
+
                             obj = GuardianTransaction.objects.create(
                                 guardian=target_my_asset,
                                 transaction_type=upload_format['transaction_type'],
@@ -191,8 +232,21 @@ def upload_mass_transaction(request):
                             )
 
                         elif upload_format['asset_type'] == 'REITS':
-                            target_my_asset = Reits.objects.get(owner=request.user,
-                                                                asset=target_asset.pk)
+                            try:
+                                target_my_asset = Reits.objects.get(owner=request.user,
+                                                                    asset=target_asset.pk)
+                            except Exception as asset_find:
+                                print('Exception in calling target Reits, {} :'.format(target_asset.ticker), asset_find)
+                                from portfolioapp.models import Portfolio
+                                my_portfolio = Portfolio.objects.get(owner=request.user)
+                                asset_obj = Reits.objects.create(
+                                    asset=target_asset,
+                                    portfolio=my_portfolio,
+                                    owner=request.user,
+                                )
+                                asset_obj.save()
+                                target_my_asset = Reits.objects.get(pk=asset_obj.pk)
+
                             obj = ReitsTransaction.objects.create(
                                 reits=target_my_asset,
                                 transaction_type=upload_format['transaction_type'],
@@ -205,8 +259,27 @@ def upload_mass_transaction(request):
                             )
 
                         elif upload_format['asset_type'] == 'PENSION':
-                            target_my_asset = PensionAsset.objects.get(owner=request.user,
-                                                                       asset=target_asset.pk)
+                            try:
+                                my_pension = Pension.objects.get(owner=request.user,
+                                                                 pension_type=upload_format['pension_type'])
+                            except Exception as pension_find:
+                                print('Target Pension({}) does not exist :'.format(upload_format['pension_type']),pension_find)
+
+                            try:
+                                target_my_asset = PensionAsset.objects.get(owner=request.user,
+                                                                           asset=target_asset.pk)
+                            except Exception as asset_find:
+                                print('Exception in calling target PensionAsset, {} :'.format(target_asset.ticker), asset_find)
+                                from portfolioapp.models import Portfolio
+                                my_portfolio = Portfolio.objects.get(owner=request.user)
+                                asset_obj = PensionAsset.objects.create(
+                                    asset=target_asset,
+                                    pension=my_pension,
+                                    owner=request.user,
+                                )
+                                asset_obj.save()
+                                target_my_asset = PensionAsset.objects.get(pk=asset_obj.pk)
+
                             obj = PensionAssetTransaction.objects.create(
                                 pension_asset=target_my_asset,
                                 transaction_type=upload_format['transaction_type'],
@@ -223,8 +296,19 @@ def upload_mass_transaction(request):
 
                 elif upload_format['asset_type'] == 'EXCHANGE':
                     try:
-                        target_foreign_currency = ForeignCurrency.objects.get(currency=upload_format['currency'],
-                                                                              owner=request.user)
+                        try:
+                            target_foreign_currency = ForeignCurrency.objects.get(currency=upload_format['currency'],
+                                                                                  owner=request.user)
+                        except Exception as foreign_currency_find:
+                            my_exchange = MyExchange.objects.get(owner=request.user)
+                            foreign_currency_obj = ForeignCurrency.objects.create(
+                                owner=request.user,
+                                exchange=my_exchange,
+                                currency=upload_format['currency'],
+                            )
+                            foreign_currency_obj.save()
+                            target_foreign_currency = ForeignCurrency.objects.get(pk=foreign_currency_obj.pk)
+
                         obj = ForeignCurrencyTransaction.objects.create(
                             foreign_currency=target_foreign_currency,
                             transaction_type=upload_format['transaction_type'],

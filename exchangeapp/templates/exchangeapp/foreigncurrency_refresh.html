@@ -1,0 +1,10 @@
+{% load bootstrap4 %}
+
+
+<form action="{% url 'exchangeapp:foreigncurrency_refresh' %}" method="get">
+    {% csrf_token %}
+    <input type="hidden" name="foreign_currency_pk" value="{{ foreign_currency.pk }}">
+    <button type="submit" style="border: none;">
+        <span class="material-icons">refresh</span>
+    </button>
+</form>

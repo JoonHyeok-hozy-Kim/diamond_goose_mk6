@@ -70,14 +70,14 @@ class Guardian(models.Model):
                 temp_qty -= transaction_data['quantity']
                 temp_amt = temp_qty * temp_price
 
-        if temp_qty < 0: average_purchase_price_mv = -999
-        elif temp_qty > 0: average_purchase_price_mv = temp_amt/temp_qty
+        if temp_qty > 0: average_purchase_price_mv = temp_amt/temp_qty
         guardian.update(average_purchase_price_mv=average_purchase_price_mv)
 
         # average_purchase_price_fifo
         transaction_amount_list = []
         temp_qty = 0
         temp_amt = 0
+        average_purchase_price_fifo = 0
         for transaction_data in transaction_data_set:
             if transaction_data['transaction_type'] == 'BUY':
                 for i in range(int(transaction_data['quantity'])):
@@ -91,7 +91,6 @@ class Guardian(models.Model):
             temp_amt += transaction_amount
 
         if temp_qty > 0: average_purchase_price_fifo = temp_amt/temp_qty
-        else: average_purchase_price_fifo = 0
         guardian.update(average_purchase_price_fifo=average_purchase_price_fifo)
 
         return {
