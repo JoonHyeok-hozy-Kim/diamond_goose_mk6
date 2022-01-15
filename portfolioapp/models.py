@@ -116,7 +116,7 @@ class Portfolio(models.Model):
         from cryptoapp.models import Crypto
         queryset_cryptoes = Crypto.objects.filter(portfolio=self.pk)
         for crypto in queryset_cryptoes:
-            crypto.update_crypto_data()
+            crypto.update_from_upbit()
             current_value += self.asset_current_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies)
             purchase_value += self.asset_purchase_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies)
             purchase_value_exchange_adjusted += self.asset_purchase_value_exchanger(crypto, my_main_currency, queryset_foreign_currencies, 'Y')
