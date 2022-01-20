@@ -11,7 +11,7 @@ services:
     ports:
       - 80:80
   django_container_gunicorn:
-    image: django_diamond_goose:220115
+    image: django_diamond_goose:220120
     networks:
       - network
     volumes:
@@ -21,6 +21,8 @@ services:
       - MYSQL_PASSWORD
       - DJANGO_SECRET_KEY
       - EXIM_BANK_API_KEY
+      - UPBIT_ACCESS_KEY
+      - UPBIT_SECRET_KEY
   mariadb:
     image: mariadb:10.5
     networks:
@@ -53,4 +55,8 @@ secrets:
   MYSQL_ROOT_PASSWORD:
       external: true
   EXIM_BANK_API_KEY:
+      external: true
+  UPBIT_ACCESS_KEY:
+      external: true
+  UPBIT_SECRET_KEY:
       external: true

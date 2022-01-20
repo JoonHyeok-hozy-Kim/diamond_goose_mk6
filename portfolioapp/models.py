@@ -105,6 +105,10 @@ class Portfolio(models.Model):
         my_main_currency = queryset_my_exchange.main_currency
         queryset_foreign_currencies = ForeignCurrency.objects.filter(exchange=queryset_my_exchange.pk)
 
+        for foreign_currency in queryset_foreign_currencies:
+            foreign_currency.update_current_rate()
+            foreign_currency.refresh_from_db()
+
         from equityapp.models import Equity
         queryset_equities = Equity.objects.filter(portfolio=self.pk)
         for equity in queryset_equities:
